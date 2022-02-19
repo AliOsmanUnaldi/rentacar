@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos;
+package com.turkcell.rentacar.business.requests.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarDto {
+public class CarListDto {
 
     private int carId;
     private double dailyPrice;

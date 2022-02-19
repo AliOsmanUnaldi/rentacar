@@ -1,21 +1,29 @@
 package com.turkcell.rentacar.business.abstracts;
 
-import java.util.List;
-
-import com.turkcell.rentacar.business.dtos.CarDto;
-import com.turkcell.rentacar.business.dtos.CarListDto;
+import com.turkcell.rentacar.business.requests.dtos.CarByIdDto;
+import com.turkcell.rentacar.business.requests.dtos.CarListDto;
 import com.turkcell.rentacar.business.requests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.UpdateCarRequest;
+import com.turkcell.rentacar.core.utilities.results.DataResult;
+import com.turkcell.rentacar.core.utilities.results.Result;
+
+import java.util.List;
 
 
 public interface CarService {
-    List<CarListDto> getAll();
+    DataResult<List<CarListDto>> getAll();
 
-    void add(CreateCarRequest createCarRequest);
+    Result add(CreateCarRequest createCarRequest);
 
-    void update(UpdateCarRequest createCarRequest);
+    Result update(UpdateCarRequest createCarRequest);
 
-    CarDto getById(int carId);
+    DataResult<CarByIdDto> getById(int carId);
 
-    void deleteById(int carId);
+    Result deleteById(int carId);
+
+    DataResult<List<CarListDto>> getAllPaged(int pageNo, int pageSize);
+
+    DataResult<List<CarListDto>> getAllSorted(String ascOrDesc);
+
+    DataResult<List<CarListDto>> getByDailyPriceIsLessThanEqual(double dailyPrice);
 }

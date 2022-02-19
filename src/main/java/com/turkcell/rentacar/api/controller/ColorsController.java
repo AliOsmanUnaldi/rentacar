@@ -1,14 +1,16 @@
 package com.turkcell.rentacar.api.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
 import com.turkcell.rentacar.business.abstracts.ColorService;
-import com.turkcell.rentacar.business.dtos.ColorDto;
-import com.turkcell.rentacar.business.dtos.ColorListDto;
+import com.turkcell.rentacar.business.requests.dtos.ColorByIdDto;
+import com.turkcell.rentacar.business.requests.dtos.ColorListDto;
 import com.turkcell.rentacar.business.requests.CreateColorRequest;
 import com.turkcell.rentacar.business.requests.UpdateColorRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
+import com.turkcell.rentacar.core.utilities.results.DataResult;
+import com.turkcell.rentacar.core.utilities.results.Result;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/colors")
@@ -23,29 +25,30 @@ public class ColorsController {
     }
 
     @GetMapping("/getall")
-    public List<ColorListDto> getAll() {
+    public DataResult<List<ColorListDto>> getAll() {
         return this.colorService.getAll();
     }
 
     @GetMapping("/getbyid")
-    public ColorDto getById(@RequestParam(required = true) int colorId) {
+    public DataResult<ColorByIdDto> getById(@RequestParam(required = true) int colorId) {
         return this.colorService.getById(colorId);
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException {
+    public Result add(@RequestBody CreateColorRequest createColorRequest) throws BusinessException {
 
-        this.colorService.add(createColorRequest);
+        return this.colorService.add(createColorRequest);
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
-        this.colorService.update(updateColorRequest);
+    public Result update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
+        return this.colorService.update(updateColorRequest);
     }
 
     @DeleteMapping("/deletebyid")
-    public void deleteById(int colorId) {
-        this.colorService.deleteById(colorId);
+    public Result deleteById(int colorId) {
+
+        return this.colorService.deleteById(colorId);
     }
 
 

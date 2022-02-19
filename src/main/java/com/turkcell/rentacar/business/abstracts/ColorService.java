@@ -1,22 +1,24 @@
 package com.turkcell.rentacar.business.abstracts;
 
-import java.util.List;
-
-import com.turkcell.rentacar.business.dtos.ColorDto;
-import com.turkcell.rentacar.business.dtos.ColorListDto;
+import com.turkcell.rentacar.business.requests.dtos.ColorByIdDto;
+import com.turkcell.rentacar.business.requests.dtos.ColorListDto;
 import com.turkcell.rentacar.business.requests.CreateColorRequest;
 import com.turkcell.rentacar.business.requests.UpdateColorRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
+import com.turkcell.rentacar.core.utilities.results.DataResult;
+import com.turkcell.rentacar.core.utilities.results.Result;
+
+import java.util.List;
 
 public interface ColorService {
 
-    List<ColorListDto> getAll();
+    DataResult<List<ColorListDto>> getAll();
 
-    void add(CreateColorRequest createColorRequest) throws BusinessException;
+    Result add(CreateColorRequest createColorRequest) throws BusinessException;
 
-    ColorDto getById(int id);
+    DataResult<ColorByIdDto> getById(int id);
 
-    void update(UpdateColorRequest updateColorRequest) throws BusinessException;
+    Result update(UpdateColorRequest updateColorRequest) throws BusinessException;
 
-    void deleteById(int colorId);
+    Result deleteById(int colorId);
 }
