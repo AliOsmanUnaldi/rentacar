@@ -8,11 +8,15 @@ import com.turkcell.rentacar.business.requests.CreateBrandRequest;
 import com.turkcell.rentacar.business.requests.UpdateBrandRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 
+
 public interface BrandService {
     List<BrandListDto> getAll();
+
     void add(CreateBrandRequest createBrandRequest) throws BusinessException;
+
     BrandDto getById(int id);
 
     void update(UpdateBrandRequest updateBrandRequest) throws BusinessException;
+
     void deleteById(int brandId);
 }

@@ -11,9 +11,12 @@ import com.turkcell.rentacar.core.exceptions.BusinessException;
 public interface ColorService {
 
     List<ColorListDto> getAll();
+
     void add(CreateColorRequest createColorRequest) throws BusinessException;
+
     ColorDto getById(int id);
 
     void update(UpdateColorRequest updateColorRequest) throws BusinessException;
+
     void deleteById(int colorId);
 }

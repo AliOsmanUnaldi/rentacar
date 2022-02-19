@@ -13,21 +13,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 public class RentacarApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RentacarApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RentacarApplication.class, args);
+    }
 
-	@Bean
-	public ModelMapper getModelMapper() {
-		return new ModelMapper();
-	}
+    @Bean
+    public ModelMapper getModelMapper() {
+        return new ModelMapper();
+    }
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.turkcell.rentacar"))
-				.build();
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.turkcell.rentacar"))
+                .build();
+    }
 
 }

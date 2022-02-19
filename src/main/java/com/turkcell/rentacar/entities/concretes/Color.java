@@ -1,17 +1,11 @@
 package com.turkcell.rentacar.entities.concretes;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,15 +14,15 @@ import lombok.NoArgsConstructor;
 @Table(name = "colors")
 public class Color {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id")
-        private int colorId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int colorId;
 
-        //@Column(name="name",unique = true)
-        @Column(name="name")
-        private String colorName;
+    //@Column(name="name",unique = true)
+    @Column(name = "name")
+    private String colorName;
 
-        @OneToMany(mappedBy = "color")
-        private List<Car> cars;
+    @OneToMany(mappedBy = "color")
+    private List<Car> cars;
 }

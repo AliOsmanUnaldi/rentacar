@@ -26,12 +26,11 @@ public class BrandManager implements BrandService {
     private ModelMapperService modelMapperService;
 
 
-
     @Override
     public List<BrandListDto> getAll() {
         List<Brand> result = this.brandDao.findAll();
         List<BrandListDto> response = result.stream()
-                .map(brand->this.modelMapperService.forDto().map(brand, BrandListDto.class))
+                .map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
                 .collect(Collectors.toList());
 
         return response;
@@ -78,8 +77,8 @@ public class BrandManager implements BrandService {
 
     private boolean checkIfBrandNameIsUnique(String brandName) throws BusinessException {
 
-        for(BrandListDto brandElement:this.getAll()) {
-            if(brandElement.getBrandName().equals(brandName)) {
+        for (BrandListDto brandElement : this.getAll()) {
+            if (brandElement.getBrandName().equals(brandName)) {
                 throw new BusinessException("Aynı isimde birden fazla marka olamaz");
             }
         }
@@ -87,7 +86,6 @@ public class BrandManager implements BrandService {
         return true;
 
     }
-
 
 
 }

@@ -33,7 +33,7 @@ public class ColorManager implements ColorService {
 
         List<Color> result = this.colorDao.findAll();
         List<ColorListDto> response = result.stream()
-                .map(color->this.modelMapperService.forDto().map(color, ColorListDto.class))
+                .map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
                 .collect(Collectors.toList());
 
         return response;
@@ -48,7 +48,6 @@ public class ColorManager implements ColorService {
 
 
         this.colorDao.save(color);
-
 
 
     }
@@ -80,8 +79,8 @@ public class ColorManager implements ColorService {
 
     private boolean checkIfColorNameIsUnique(String colorName) throws BusinessException {
 
-        for(ColorListDto colorElement:this.getAll()) {
-            if(colorElement.getColorName().equals(colorName)) {
+        for (ColorListDto colorElement : this.getAll()) {
+            if (colorElement.getColorName().equals(colorName)) {
                 throw new BusinessException("Aynı isimde birden fazla renk olamaz");
             }
         }

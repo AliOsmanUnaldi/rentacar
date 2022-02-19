@@ -31,7 +31,7 @@ public class CarManager implements CarService {
         List<Car> result = carDao.findAll();
 
         List<CarListDto> response = result.stream()
-                .map(car->this.modelMapperService.forDto().map(car, CarListDto.class))
+                .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
 
         return response;

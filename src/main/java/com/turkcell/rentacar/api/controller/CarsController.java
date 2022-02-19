@@ -22,7 +22,7 @@ public class CarsController {
     }
 
     @GetMapping("/getall")
-    public List<CarListDto> getAll(){
+    public List<CarListDto> getAll() {
         return this.carService.getAll();
     }
 
@@ -33,7 +33,7 @@ public class CarsController {
     }
 
     @GetMapping("/getbyid")
-    public CarDto getById(@RequestParam(required = true) int carId){
+    public CarDto getById(@RequestParam(required = true) int carId) {
         return this.carService.getById(carId);
     }
 

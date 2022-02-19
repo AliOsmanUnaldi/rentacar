@@ -23,12 +23,12 @@ public class ColorsController {
     }
 
     @GetMapping("/getall")
-    public List<ColorListDto> getAll(){
+    public List<ColorListDto> getAll() {
         return this.colorService.getAll();
     }
 
     @GetMapping("/getbyid")
-    public ColorDto getById(@RequestParam(required = true) int colorId){
+    public ColorDto getById(@RequestParam(required = true) int colorId) {
         return this.colorService.getById(colorId);
     }
 
@@ -47,7 +47,6 @@ public class ColorsController {
     public void deleteById(int colorId) {
         this.colorService.deleteById(colorId);
     }
-
 
 
 }

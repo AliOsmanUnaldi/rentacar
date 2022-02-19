@@ -25,7 +25,7 @@ public class BrandsController {
     }
 
     @GetMapping("/getall")
-    public List<BrandListDto> getAll(){
+    public List<BrandListDto> getAll() {
         return this.brandService.getAll();
     }
 
@@ -36,7 +36,7 @@ public class BrandsController {
     }
 
     @GetMapping("/getbyid")
-    public BrandDto getById(@RequestParam(required = true) int brandId){
+    public BrandDto getById(@RequestParam(required = true) int brandId) {
         return this.brandService.getById(brandId);
     }
 
@@ -49,7 +49,6 @@ public class BrandsController {
     public void deleteById(int brandId) {
         this.brandService.deleteById(brandId);
     }
-
 
 
 }
