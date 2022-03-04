@@ -1,8 +1,8 @@
 package com.turkcell.rentacar.api.controller;
 
 import com.turkcell.rentacar.business.abstracts.CarService;
-import com.turkcell.rentacar.business.requests.dtos.CarByIdDto;
-import com.turkcell.rentacar.business.requests.dtos.CarListDto;
+import com.turkcell.rentacar.business.dtos.CarByIdDto;
+import com.turkcell.rentacar.business.dtos.CarListDto;
 import com.turkcell.rentacar.business.requests.CreateCarRequest;
 import com.turkcell.rentacar.business.requests.UpdateCarRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
@@ -10,6 +10,7 @@ import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class CarsController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CreateCarRequest createcarRequest) throws BusinessException {
+    public Result add(@RequestBody @Valid CreateCarRequest createcarRequest) throws BusinessException {
 
         return this.carService.add(createcarRequest);
     }
@@ -46,7 +47,6 @@ public class CarsController {
 
     @DeleteMapping("/deletebyid")
     public Result deleteById(int carId) {
-
         return this.carService.deleteById(carId);
     }
 
