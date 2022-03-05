@@ -68,7 +68,7 @@ public class CarManager implements CarService {
 
     @Override
     public DataResult<List<CarListDto>> getAllPaged(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         List<Car> result = carDao.findAll(pageable).getContent();
         List<CarListDto> response = result.stream()
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
@@ -79,9 +79,9 @@ public class CarManager implements CarService {
     @Override
     public DataResult<List<CarListDto>> getAllSorted(String ascOrDesc) {
         Sort sort;
-        String value = (ascOrDesc.equals("ASC") || ascOrDesc.equals("DESC") ) ? ascOrDesc : "DESC";
+        String value = (ascOrDesc.equals("ASC") || ascOrDesc.equals("DESC")) ? ascOrDesc : "DESC";
 
-            sort = Sort.by(Sort.Direction.valueOf(value),"dailyPrice");
+        sort = Sort.by(Sort.Direction.valueOf(value), "dailyPrice");
 
         List<Car> result = carDao.findAll(sort);
         List<CarListDto> response = result.stream()

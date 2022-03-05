@@ -8,7 +8,6 @@ import com.turkcell.rentacar.business.requests.UpdateCarMaintenanceRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
-import com.turkcell.rentacar.entities.concretes.CarMaintenance;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +21,7 @@ public class CarMaintenancesController {
     public CarMaintenancesController(CarMaintenanceService carMaintenanceService) {
         this.carMaintenanceService = carMaintenanceService;
     }
+
     @GetMapping("/getall")
     public DataResult<List<CarMaintenanceListDto>> getAll() {
         return this.carMaintenanceService.getAll();
@@ -44,12 +44,12 @@ public class CarMaintenancesController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(int carMaintenanceId) {
+    public Result deleteById(@RequestParam int carMaintenanceId) {
         return this.carMaintenanceService.deleteById(carMaintenanceId);
     }
 
     @GetMapping("/getMaintenancesByCarId")
-    public DataResult<List<CarMaintenanceListDto>> getMaintenancesByCarId(@RequestParam int carId){
+    public DataResult<List<CarMaintenanceListDto>> getMaintenancesByCarId(@RequestParam int carId) {
         return this.carMaintenanceService.getByCarId(carId);
     }
 }

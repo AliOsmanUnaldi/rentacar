@@ -9,10 +9,11 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceByIdDto {
+public class RentByIdDto {
 
-    private int carMaintenanceId;
-    private String description;
-    private LocalDate returnDate;
+    private LocalDate startDate;
+
+    private LocalDate finishDate;
+
     private int carId;
 }

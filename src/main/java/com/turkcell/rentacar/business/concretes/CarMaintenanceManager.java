@@ -32,21 +32,22 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     public DataResult<List<CarMaintenanceListDto>> getAll() {
         List<CarMaintenance> result = carMaintenanceDao.findAll();
         List<CarMaintenanceListDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance,CarMaintenanceListDto.class))
+                .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarMaintenanceListDto>>(response,"Maintenance is listed successfuly.");
+        return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "Maintenance is listed successfuly.");
     }
 
     @Override
     public Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) {
-        CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest,CarMaintenance.class);
+        CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(createCarMaintenanceRequest, CarMaintenance.class);
+        carMaintenance.setCarMaintenanceId(0);
         this.carMaintenanceDao.save(carMaintenance);
         return new SuccessResult("Maintenance is added.");
     }
 
     @Override
     public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
-        CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,CarMaintenance.class);
+        CarMaintenance carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest, CarMaintenance.class);
         this.carMaintenanceDao.save(carMaintenance);
         return new SuccessResult("Maintenance is updated.");
     }
@@ -54,7 +55,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     @Override
     public DataResult<CarMaintenanceByIdDto> getById(int carMaintenanceId) {
         CarMaintenance carMaintenance = this.carMaintenanceDao.getById(carMaintenanceId);
-        CarMaintenanceByIdDto response = this.modelMapperService.forDto().map(carMaintenance,CarMaintenanceByIdDto.class);
+        CarMaintenanceByIdDto response = this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceByIdDto.class);
         return new SuccessDataResult<CarMaintenanceByIdDto>(response);
     }
 
@@ -68,8 +69,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
     public DataResult<List<CarMaintenanceListDto>> getByCarId(int id) {
         List<CarMaintenance> result = this.carMaintenanceDao.getAllByCar_CarId(id);
         List<CarMaintenanceListDto> response = result.stream()
-                .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance,CarMaintenanceListDto.class))
+                .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenanceListDto.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<List<CarMaintenanceListDto>>(response,"Maintenances are listed.");
+        return new SuccessDataResult<List<CarMaintenanceListDto>>(response, "Maintenances are listed.");
     }
 }

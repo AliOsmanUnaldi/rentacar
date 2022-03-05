@@ -46,7 +46,7 @@ public class CarsController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(int carId) {
+    public Result deleteById(@RequestParam int carId) {
         return this.carService.deleteById(carId);
     }
 

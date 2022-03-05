@@ -47,7 +47,7 @@ public class BrandsController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(int brandId) {
+    public Result deleteById(@RequestParam int brandId) {
 
         return this.brandService.deleteById(brandId);
     }

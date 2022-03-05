@@ -46,7 +46,7 @@ public class ColorsController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(int colorId) {
+    public Result deleteById(@RequestParam int colorId) {
 
         return this.colorService.deleteById(colorId);
     }

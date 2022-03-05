@@ -11,10 +11,12 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCarMaintenanceRequest {
+public class CreateRentRequest {
 
-    private String description;
-    private LocalDate returnDate;
+    @NotNull
+    private LocalDate startDate;
+
+    private LocalDate finishDate;
 
     @NotNull
     @Positive
