@@ -1,9 +1,9 @@
 package com.turkcell.rentacar.business.abstracts;
 
-import com.turkcell.rentacar.business.dtos.RentByIdDto;
-import com.turkcell.rentacar.business.dtos.RentListDto;
-import com.turkcell.rentacar.business.requests.CreateRentRequest;
-import com.turkcell.rentacar.business.requests.UpdateRentRequest;
+import com.turkcell.rentacar.business.dtos.rentDtos.RentByIdDto;
+import com.turkcell.rentacar.business.dtos.rentDtos.RentListDto;
+import com.turkcell.rentacar.business.requests.rentRequests.CreateRentRequest;
+import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -15,9 +15,9 @@ public interface RentService {
 
     Result add(CreateRentRequest createRentRequest) throws BusinessException;
 
-    DataResult<RentByIdDto> getById(int id);
+    DataResult<RentByIdDto> getByRentId(int id) throws BusinessException;
 
     Result update(UpdateRentRequest updateRentRequest) throws BusinessException;
 
-    Result deleteByRentId(int rentId);
+    Result deleteByRentId(int rentId) throws BusinessException;
 }

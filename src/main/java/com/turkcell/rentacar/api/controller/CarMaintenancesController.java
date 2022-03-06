@@ -1,10 +1,10 @@
 package com.turkcell.rentacar.api.controller;
 
 import com.turkcell.rentacar.business.abstracts.CarMaintenanceService;
-import com.turkcell.rentacar.business.dtos.CarMaintenanceByIdDto;
-import com.turkcell.rentacar.business.dtos.CarMaintenanceListDto;
-import com.turkcell.rentacar.business.requests.CreateCarMaintenanceRequest;
-import com.turkcell.rentacar.business.requests.UpdateCarMaintenanceRequest;
+import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceByIdDto;
+import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
+import com.turkcell.rentacar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
+import com.turkcell.rentacar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -34,8 +34,8 @@ public class CarMaintenancesController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<CarMaintenanceByIdDto> getById(@RequestParam(required = true) int carMaintenanceId) {
-        return this.carMaintenanceService.getById(carMaintenanceId);
+    public DataResult<CarMaintenanceByIdDto> getById(@RequestParam(required = true) int carMaintenanceId) throws BusinessException {
+        return this.carMaintenanceService.getByCarMaintenanceId(carMaintenanceId);
     }
 
     @PostMapping("/update")
@@ -44,7 +44,7 @@ public class CarMaintenancesController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(@RequestParam int carMaintenanceId) {
+    public Result deleteById(@RequestParam int carMaintenanceId) throws BusinessException {
         return this.carMaintenanceService.deleteById(carMaintenanceId);
     }
 

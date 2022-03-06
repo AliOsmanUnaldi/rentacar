@@ -1,10 +1,10 @@
 package com.turkcell.rentacar.api.controller;
 
 import com.turkcell.rentacar.business.abstracts.ColorService;
-import com.turkcell.rentacar.business.dtos.ColorByIdDto;
-import com.turkcell.rentacar.business.dtos.ColorListDto;
-import com.turkcell.rentacar.business.requests.CreateColorRequest;
-import com.turkcell.rentacar.business.requests.UpdateColorRequest;
+import com.turkcell.rentacar.business.dtos.colorDtos.ColorByIdDto;
+import com.turkcell.rentacar.business.dtos.colorDtos.ColorListDto;
+import com.turkcell.rentacar.business.requests.colorRequests.CreateColorRequest;
+import com.turkcell.rentacar.business.requests.colorRequests.UpdateColorRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -30,8 +30,8 @@ public class ColorsController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<ColorByIdDto> getById(@RequestParam(required = true) int colorId) {
-        return this.colorService.getById(colorId);
+    public DataResult<ColorByIdDto> getById(@RequestParam(required = true) int colorId) throws BusinessException {
+        return this.colorService.getByColorId(colorId);
     }
 
     @PostMapping("/add")
@@ -46,9 +46,9 @@ public class ColorsController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(@RequestParam int colorId) {
+    public Result deleteById(@RequestParam int colorId) throws BusinessException {
 
-        return this.colorService.deleteById(colorId);
+        return this.colorService.deleteByColorId(colorId);
     }
 
 

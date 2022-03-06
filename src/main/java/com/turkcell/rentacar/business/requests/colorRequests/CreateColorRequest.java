@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos;
+package com.turkcell.rentacar.business.requests.colorRequests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ColorByIdDto {
+public class CreateColorRequest {
 
-    private int colorId;
     private String colorName;
 }

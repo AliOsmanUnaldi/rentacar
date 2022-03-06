@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos;
+package com.turkcell.rentacar.business.requests.carRequests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarByIdDto {
+public class UpdateCarRequest {
 
     private int carId;
     private double dailyPrice;
     private int modelYear;
     private String description;
-    private String brandName;
-    private String colorName;
+    private int brandId;
+    private int colorId;
 }

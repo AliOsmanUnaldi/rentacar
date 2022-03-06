@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.dtos;
+package com.turkcell.rentacar.business.requests.carMaintenanceRequests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceByIdDto {
-
-    private int carMaintenanceId;
+public class UpdateCarMaintenanceRequest {
+    private int id;
     private String description;
     private LocalDate returnDate;
     private int carId;

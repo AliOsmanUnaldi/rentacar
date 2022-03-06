@@ -2,11 +2,11 @@ package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CarMaintenanceService;
 import com.turkcell.rentacar.business.abstracts.RentService;
-import com.turkcell.rentacar.business.dtos.CarMaintenanceListDto;
-import com.turkcell.rentacar.business.dtos.RentByIdDto;
-import com.turkcell.rentacar.business.dtos.RentListDto;
-import com.turkcell.rentacar.business.requests.CreateRentRequest;
-import com.turkcell.rentacar.business.requests.UpdateRentRequest;
+import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
+import com.turkcell.rentacar.business.dtos.rentDtos.RentByIdDto;
+import com.turkcell.rentacar.business.dtos.rentDtos.RentListDto;
+import com.turkcell.rentacar.business.requests.rentRequests.CreateRentRequest;
+import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
@@ -40,42 +40,38 @@ public class RentManager implements RentService {
         List<RentListDto> response = result.stream()
                 .map(rent -> this.modelMapperService.forDto().map(rent, RentListDto.class))
                 .collect(Collectors.toList());
-
-        return new SuccessDataResult<List<RentListDto>>(response, "Rent infos are listed successfully.");
+        return new SuccessDataResult<List<RentListDto>>(response, "Rents' infos are listed successfully.");
 
     }
 
     @Override
     public Result add(CreateRentRequest createRentRequest) throws BusinessException {
-        Rent rent = this.modelMapperService.forRequest().map(createRentRequest, Rent.class);
-
+        System.out.println(createRentRequest.getCarId());
         checkIfCarIsInMaintenance(createRentRequest.getCarId());
-
+        Rent rent = this.modelMapperService.forRequest().map(createRentRequest, Rent.class);
         this.rentDao.save(rent);
-
         return new SuccessResult("Rent is created.");
     }
 
     @Override
-    public DataResult<RentByIdDto> getById(int id) {
+    public DataResult<RentByIdDto> getByRentId(int id) throws BusinessException {
+        checkIfRentExists(id);
         Rent rent = this.rentDao.getById(id);
-
         RentByIdDto response = this.modelMapperService.forDto().map(rent, RentByIdDto.class);
-
         return new SuccessDataResult<RentByIdDto>(response);
     }
 
     @Override
     public Result update(UpdateRentRequest updateRentRequest) throws BusinessException {
+        checkIfRentExists(updateRentRequest.getRentId());
         Rent rent = this.modelMapperService.forRequest().map(updateRentRequest, Rent.class);
-
         this.rentDao.save(rent);
-
         return new SuccessResult("Rent info is updated.");
     }
 
     @Override
-    public Result deleteByRentId(int rentId) {
+    public Result deleteByRentId(int rentId) throws BusinessException {
+        checkIfRentExists(rentId);
         this.rentDao.deleteById(rentId);
         return new SuccessResult("Rent is deleted.");
     }
@@ -83,13 +79,20 @@ public class RentManager implements RentService {
     private void checkIfCarIsInMaintenance(int carId) throws BusinessException {
         DataResult<List<CarMaintenanceListDto>> result = this.carMaintenanceService.getByCarId(carId);
         List<CarMaintenance> response = result.getData().stream()
-                .map(carmaintenance -> this.modelMapperService.forDto().map(carmaintenance, CarMaintenance.class))
+                .map(carMaintenance -> this.modelMapperService.forDto().map(carMaintenance, CarMaintenance.class))
                 .collect(Collectors.toList());
-        for (CarMaintenance carMaintenace : response
+        for (CarMaintenance carMaintenance : response
         ) {
-            if (carMaintenace.getReturnDate() == null) {
+            if (carMaintenance.getReturnDate() == null) {
                 throw new BusinessException("Araba bakımda");
             }
         }
+    }
+
+    private boolean checkIfRentExists(int rentId) throws BusinessException {
+        if (!rentDao.existsById(rentId)){
+            throw new BusinessException("Rent does not exist with id: ' "+rentId+" '.");
+        }
+        return true;
     }
 }

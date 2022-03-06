@@ -1,4 +1,4 @@
-package com.turkcell.rentacar.business.requests;
+package com.turkcell.rentacar.business.requests.carRequests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

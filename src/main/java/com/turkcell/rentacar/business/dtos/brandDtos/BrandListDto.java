@@ -1,13 +1,13 @@
-package com.turkcell.rentacar.business.requests;
+package com.turkcell.rentacar.business.dtos.brandDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBrandRequest {
+@NoArgsConstructor
+public class BrandListDto {
 
     private int brandId;
     private String brandName;

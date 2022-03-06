@@ -1,9 +1,10 @@
 package com.turkcell.rentacar.business.abstracts;
 
-import com.turkcell.rentacar.business.dtos.CarByIdDto;
-import com.turkcell.rentacar.business.dtos.CarListDto;
-import com.turkcell.rentacar.business.requests.CreateCarRequest;
-import com.turkcell.rentacar.business.requests.UpdateCarRequest;
+import com.turkcell.rentacar.business.dtos.carDtos.CarByIdDto;
+import com.turkcell.rentacar.business.dtos.carDtos.CarListDto;
+import com.turkcell.rentacar.business.requests.carRequests.CreateCarRequest;
+import com.turkcell.rentacar.business.requests.carRequests.UpdateCarRequest;
+import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 
@@ -15,11 +16,11 @@ public interface CarService {
 
     Result add(CreateCarRequest createCarRequest);
 
-    Result update(UpdateCarRequest createCarRequest);
+    Result update(UpdateCarRequest createCarRequest) throws BusinessException;
 
-    DataResult<CarByIdDto> getById(int carId);
+    DataResult<CarByIdDto> getByCarId(int carId) throws BusinessException;
 
-    Result deleteById(int carId);
+    Result deleteByCarId(int carId) throws BusinessException;
 
     DataResult<List<CarListDto>> getAllPaged(int pageNo, int pageSize);
 

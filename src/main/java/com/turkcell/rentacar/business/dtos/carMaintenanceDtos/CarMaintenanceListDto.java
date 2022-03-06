@@ -1,22 +1,18 @@
-package com.turkcell.rentacar.business.requests;
+package com.turkcell.rentacar.business.dtos.carMaintenanceDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCarMaintenanceRequest {
+public class CarMaintenanceListDto {
 
+    private int carMaintenanceId;
     private String description;
     private LocalDate returnDate;
-
-    @NotNull
-    @Positive
     private int carId;
 }

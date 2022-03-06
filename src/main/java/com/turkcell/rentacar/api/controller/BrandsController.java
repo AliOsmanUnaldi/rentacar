@@ -1,10 +1,10 @@
 package com.turkcell.rentacar.api.controller;
 
 import com.turkcell.rentacar.business.abstracts.BrandService;
-import com.turkcell.rentacar.business.dtos.BrandByIdDto;
-import com.turkcell.rentacar.business.dtos.BrandListDto;
-import com.turkcell.rentacar.business.requests.CreateBrandRequest;
-import com.turkcell.rentacar.business.requests.UpdateBrandRequest;
+import com.turkcell.rentacar.business.dtos.brandDtos.BrandByIdDto;
+import com.turkcell.rentacar.business.dtos.brandDtos.BrandListDto;
+import com.turkcell.rentacar.business.requests.brandRequests.CreateBrandRequest;
+import com.turkcell.rentacar.business.requests.brandRequests.UpdateBrandRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -37,8 +37,8 @@ public class BrandsController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<BrandByIdDto> getById(@RequestParam(required = true) int brandId) {
-        return this.brandService.getById(brandId);
+    public DataResult<BrandByIdDto> getById(@RequestParam(required = true) int brandId) throws BusinessException {
+        return this.brandService.getByBrandId(brandId);
     }
 
     @PostMapping("/update")
@@ -47,7 +47,7 @@ public class BrandsController {
     }
 
     @DeleteMapping("/deletebyid")
-    public Result deleteById(@RequestParam int brandId) {
+    public Result deleteById(@RequestParam int brandId) throws BusinessException {
 
         return this.brandService.deleteById(brandId);
     }

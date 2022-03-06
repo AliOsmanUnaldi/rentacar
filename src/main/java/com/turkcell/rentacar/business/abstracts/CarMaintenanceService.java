@@ -1,9 +1,10 @@
 package com.turkcell.rentacar.business.abstracts;
 
-import com.turkcell.rentacar.business.dtos.CarMaintenanceByIdDto;
-import com.turkcell.rentacar.business.dtos.CarMaintenanceListDto;
-import com.turkcell.rentacar.business.requests.CreateCarMaintenanceRequest;
-import com.turkcell.rentacar.business.requests.UpdateCarMaintenanceRequest;
+import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceByIdDto;
+import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
+import com.turkcell.rentacar.business.requests.carMaintenanceRequests.CreateCarMaintenanceRequest;
+import com.turkcell.rentacar.business.requests.carMaintenanceRequests.UpdateCarMaintenanceRequest;
+import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
 
@@ -15,11 +16,11 @@ public interface CarMaintenanceService {
 
     Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
 
-    Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest);
+    Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException;
 
-    DataResult<CarMaintenanceByIdDto> getById(int carMaintenanceId);
+    DataResult<CarMaintenanceByIdDto> getByCarMaintenanceId(int carMaintenanceId) throws BusinessException;
 
-    Result deleteById(int carMaintenanceId);
+    Result deleteById(int carMaintenanceId) throws BusinessException;
 
-    DataResult<List<CarMaintenanceListDto>> getByCarId(int id);
+    DataResult<List<CarMaintenanceListDto>> getByCarId(int carId) ;
 }
