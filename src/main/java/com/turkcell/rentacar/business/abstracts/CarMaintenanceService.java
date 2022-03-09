@@ -14,13 +14,13 @@ public interface CarMaintenanceService {
 
     DataResult<List<CarMaintenanceListDto>> getAll();
 
-    Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest);
+    Result add(CreateCarMaintenanceRequest createCarMaintenanceRequest) throws BusinessException;
 
     Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) throws BusinessException;
 
-    DataResult<CarMaintenanceByIdDto> getByCarMaintenanceId(int carMaintenanceId) throws BusinessException;
+    DataResult<CarMaintenanceByIdDto> getById(int id) throws BusinessException;
 
-    Result deleteById(int carMaintenanceId) throws BusinessException;
+    Result deleteById(int id) throws BusinessException;
 
     DataResult<List<CarMaintenanceListDto>> getByCarId(int carId) ;
 }

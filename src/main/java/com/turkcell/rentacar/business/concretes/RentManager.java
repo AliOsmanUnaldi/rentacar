@@ -76,6 +76,15 @@ public class RentManager implements RentService {
         return new SuccessResult("Rent is deleted.");
     }
 
+    @Override
+    public DataResult<List<RentListDto>> getAllRentsByCarId(int carId) {
+        List<Rent> result = this.rentDao.getAllByCar_CarId(carId);
+        List<RentListDto> response = result.stream()
+                .map(rent -> this.modelMapperService.forDto().map(rent,RentListDto.class))
+                .collect(Collectors.toList());
+        return new SuccessDataResult<List<RentListDto>>(response,"Rents are listed for chosen car.");
+    }
+
     private void checkIfCarIsInMaintenance(int carId) throws BusinessException {
         DataResult<List<CarMaintenanceListDto>> result = this.carMaintenanceService.getByCarId(carId);
         List<CarMaintenance> response = result.getData().stream()

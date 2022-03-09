@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CarMaintenanceByIdDto {
 
-    private int carMaintenanceId;
+    private int id;
     private String description;
     private LocalDate returnDate;
-    private int carId;
+    private int carCarId;
 }

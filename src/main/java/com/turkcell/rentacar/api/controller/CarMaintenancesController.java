@@ -34,8 +34,8 @@ public class CarMaintenancesController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<CarMaintenanceByIdDto> getById(@RequestParam(required = true) int carMaintenanceId) throws BusinessException {
-        return this.carMaintenanceService.getByCarMaintenanceId(carMaintenanceId);
+    public DataResult<CarMaintenanceByIdDto> getById(@RequestParam int carMaintenanceId) throws BusinessException {
+        return this.carMaintenanceService.getById(carMaintenanceId);
     }
 
     @PostMapping("/update")
@@ -49,7 +49,7 @@ public class CarMaintenancesController {
     }
 
     @GetMapping("/getMaintenancesByCarId")
-    public DataResult<List<CarMaintenanceListDto>> getMaintenancesByCarId(@RequestParam int carId) {
+    public DataResult<List<CarMaintenanceListDto>> getMaintenancesByCarId(@RequestParam int carId) throws BusinessException {
         return this.carMaintenanceService.getByCarId(carId);
     }
 }
