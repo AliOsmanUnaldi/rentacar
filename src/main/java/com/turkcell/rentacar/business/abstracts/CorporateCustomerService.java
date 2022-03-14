@@ -7,6 +7,8 @@ import com.turkcell.rentacar.business.requests.corporateCustomerRequests.DeleteC
 import com.turkcell.rentacar.business.requests.corporateCustomerRequests.UpdateCorporateCustomerRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
+import com.turkcell.rentacar.entities.concretes.CorporateCustomer;
+import com.turkcell.rentacar.entities.concretes.IndividualCustomer;
 
 import java.util.List;
 
@@ -20,5 +22,7 @@ public interface CorporateCustomerService {
 
     Result delete(DeleteCorporateCustomerRequest deleteCorporateCustomerRequest);
 
-    DataResult<CorporateCustomerByIdDto> getCorporateCustomerByUserId(int userId);
+    DataResult<CorporateCustomerByIdDto> getCorporateCustomerByIdDtoByUserId(int userId);
+
+    DataResult<CorporateCustomer> getCorporateCustomerByUserId(int userId);
 }

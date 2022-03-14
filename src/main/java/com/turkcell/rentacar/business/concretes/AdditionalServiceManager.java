@@ -28,6 +28,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
     @Autowired
     public AdditionalServiceManager(AdditionalServiceDao additionalServiceDao, ModelMapperService modelMapperService) {
+
         this.additionalServiceDao = additionalServiceDao;
         this.modelMapperService = modelMapperService;
     }
@@ -36,6 +37,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
     public DataResult<List<AdditionalServiceListDto>> getAll() {
 
         List<AdditionalService> result = this.additionalServiceDao.findAll();
+
         List<AdditionalServiceListDto> response = result.stream().
                 map(additionalService -> this.modelMapperService.forDto()
                         .map(additionalService, AdditionalServiceListDto.class))
@@ -46,15 +48,20 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
     @Override
     public Result add(CreateAdditionalServiceRequest createAdditionalServiceRequest) throws BusinessException {
+
         AdditionalService additionalService = this.modelMapperService.forRequest()
                 .map(createAdditionalServiceRequest, AdditionalService.class);
+
         this.additionalServiceDao.save(additionalService);
+
         return new SuccessResult("Service is saved");
     }
 
     @Override
     public DataResult<AdditionalServiceDto> getById(int id) throws BusinessException {
+
         AdditionalService additionalService = this.additionalServiceDao.getById(id);
+
         AdditionalServiceDto response = this.modelMapperService.forDto()
                 .map(additionalService, AdditionalServiceDto.class);
 
@@ -63,8 +70,10 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
     @Override
     public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws BusinessException {
+
         AdditionalService additionalService = this.modelMapperService.forRequest()
                 .map(updateAdditionalServiceRequest, AdditionalService.class);
+
         this.additionalServiceDao.save(additionalService);
 
         return new SuccessResult("Service uptaded.");
@@ -72,7 +81,9 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
     @Override
     public Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) throws BusinessException {
+
         this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
+
         return new SuccessResult("Service deleted.");
     }
 

@@ -27,6 +27,14 @@ public class Rent {
     @JoinColumn(name = "delivered_city_id",referencedColumnName = "id")
     private City deliveredCity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "individual_customer_id", referencedColumnName = "user_id", nullable = true)
+    private IndividualCustomer individualCustomer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "corporate_customer_id",referencedColumnName = "user_id", nullable = true)
+    private CorporateCustomer corporateCustomer;
+
     @Column(name = "start_date")
     private LocalDate startDate;
 

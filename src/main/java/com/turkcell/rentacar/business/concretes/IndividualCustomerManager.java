@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
     private final ModelMapperService modelMapperService;
 
     public IndividualCustomerManager(IndividualCustomerDao individualCustomerDao, ModelMapperService modelMapperService) {
+
         this.individualCustomerDao = individualCustomerDao;
         this.modelMapperService = modelMapperService;
     }
@@ -71,12 +72,18 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public DataResult<IndividualCustomerByIdDto> getIndividualCustomerByUserId(int userId) {
+    public DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByUserId(int userId) {
 
         IndividualCustomer individualCustomer = this.individualCustomerDao.getById(userId);
 
         IndividualCustomerByIdDto response = this.modelMapperService.forDto().map(individualCustomer, IndividualCustomerByIdDto.class);
 
         return new SuccessDataResult<IndividualCustomerByIdDto>(response,"Individual customer found by given id : "+userId);
+    }
+
+    @Override
+    public DataResult<IndividualCustomer> getIndividualCustomerByUserId(int userId) {
+
+        return new SuccessDataResult<IndividualCustomer>(this.individualCustomerDao.getById(userId));
     }
 }

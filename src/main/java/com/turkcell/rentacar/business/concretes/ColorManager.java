@@ -41,6 +41,7 @@ public class ColorManager implements ColorService {
     public Result add(CreateColorRequest createColorRequest) throws BusinessException {
 
         Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
+
         checkIfColorNameIsUnique(color.getColorName());
 
         this.colorDao.save(color);
@@ -50,43 +51,64 @@ public class ColorManager implements ColorService {
 
     @Override
     public DataResult<ColorByIdDto> getByColorId(int colorId) throws BusinessException {
+
         checkIfColorExists(colorId);
+
         Color color = this.colorDao.getById(colorId);
         ColorByIdDto response = this.modelMapperService.forDto().map(color, ColorByIdDto.class);
+
         return new SuccessDataResult<ColorByIdDto>(response);
     }
 
 
     @Override
     public Result update(UpdateColorRequest updateColorRequest) throws BusinessException {
+
         checkIfColorExists(updateColorRequest.getColorId());
+
         Color color = this.modelMapperService.forRequest().map(updateColorRequest, Color.class);
         checkIfColorNameIsUnique(color.getColorName());
+
         this.colorDao.save(color);
+
         return new SuccessResult("Color is updated.");
     }
 
     @Override
     public Result deleteByColorId(int colorId) throws BusinessException {
+
         checkIfColorExists(colorId);
+
         this.colorDao.deleteById(colorId);
+
         return new SuccessResult("Color is deleted.");
     }
 
     private boolean checkIfColorNameIsUnique(String colorName) throws BusinessException {
+
         for (ColorListDto colorElement : this.getAll().getData()) {
+
             if (colorElement.getColorName().equals(colorName)) {
+
                 throw new BusinessException("Aynı isimde birden fazla renk olamaz");
+
             }
         }
+
         return true;
+
     }
 
     private boolean checkIfColorExists(int colorId) throws BusinessException {
+
         if (!colorDao.existsById(colorId)){
+
             throw new BusinessException("Color does not exist with id: ' "+colorId+" '.");
+
         }
+
         return true;
+
     }
 
 }

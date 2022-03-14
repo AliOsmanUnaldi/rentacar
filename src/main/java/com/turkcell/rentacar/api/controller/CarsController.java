@@ -37,31 +37,37 @@ public class CarsController {
 
     @GetMapping("/getbyid")
     public DataResult<CarByIdDto> getById(@RequestParam(required = true) int carId) throws BusinessException {
+
         return this.carService.getByCarId(carId);
     }
 
     @PostMapping("/update")
     public Result update(@RequestBody UpdateCarRequest updatecarRequest) throws BusinessException {
+
         return this.carService.update(updatecarRequest);
     }
 
     @DeleteMapping("/deletebyid")
     public Result deleteById(@RequestParam int carId) throws BusinessException {
+
         return this.carService.deleteByCarId(carId);
     }
 
     @GetMapping("/getAllPaged")
     public DataResult<List<CarListDto>> getAllPaged(int pageNo, int pageSize) {
+
         return this.carService.getAllPaged(pageNo, pageSize);
     }
 
     @GetMapping("/getAllSorted")
     public DataResult<List<CarListDto>> getAllSorted(String ascOrDesc) {
+
         return this.carService.getAllSorted(ascOrDesc);
     }
 
     @GetMapping("/sortAllByDailyPrice")
     public DataResult<List<CarListDto>> getByDailyPriceIsLessThanEqual(double dailyPrice) {
+
         return this.carService.getByDailyPriceIsLessThanEqual(dailyPrice);
     }
 

@@ -21,12 +21,13 @@ public class BrandsController {
     private BrandService brandService;
 
     public BrandsController(BrandService brandService) {
-        super();
+
         this.brandService = brandService;
     }
 
     @GetMapping("/getall")
     public DataResult<List<BrandListDto>> getAll() {
+
         return this.brandService.getAll();
     }
 
@@ -38,11 +39,13 @@ public class BrandsController {
 
     @GetMapping("/getbyid")
     public DataResult<BrandByIdDto> getById(@RequestParam(required = true) int brandId) throws BusinessException {
+
         return this.brandService.getByBrandId(brandId);
     }
 
     @PostMapping("/update")
     public Result update(@RequestBody UpdateBrandRequest updateBrandRequest) throws BusinessException {
+
         return this.brandService.update(updateBrandRequest);
     }
 

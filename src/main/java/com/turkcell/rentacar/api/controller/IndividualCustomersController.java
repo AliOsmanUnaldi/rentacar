@@ -20,6 +20,7 @@ public class IndividualCustomersController {
     private IndividualCustomerService individualCustomerService;
 
     public IndividualCustomersController(IndividualCustomerService individualCustomerService) {
+
         this.individualCustomerService = individualCustomerService;
     }
 
@@ -50,6 +51,6 @@ public class IndividualCustomersController {
     @GetMapping("/getIndividualCustomerByUserId")
     public DataResult<IndividualCustomerByIdDto> getIndividualCustomerByUserId(int userId){
 
-        return this.individualCustomerService.getIndividualCustomerByUserId(userId);
+        return this.individualCustomerService.getIndividualCustomerByIdDtoByUserId(userId);
     }
 }

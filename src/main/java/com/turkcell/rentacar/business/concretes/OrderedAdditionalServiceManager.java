@@ -33,6 +33,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
     public OrderedAdditionalServiceManager(OrderedAdditionalServiceDao orderedAdditionalServiceDao,
                                            ModelMapperService modelMapperService,AdditionalServiceService additionalServiceService) {
+
         this.orderedAdditionalServiceDao = orderedAdditionalServiceDao;
         this.modelMapperService = modelMapperService;
         this.additionalServiceService = additionalServiceService;
@@ -40,6 +41,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
     @Override
     public DataResult<List<OrderedAdditionalServiceListDto>> getAll() {
+
         List<OrderedAdditionalService> result = this.orderedAdditionalServiceDao.findAll();
 
         List<OrderedAdditionalServiceListDto> response = result.stream()
@@ -55,13 +57,15 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
             throws BusinessException {
 
         Set<AdditionalService> services = new HashSet<AdditionalService>();
+
         for (Integer id : createOrderedAdditionalServiceRequest.getAdditionalServices()) {
+
             AdditionalServiceDto data = this.additionalServiceService.getById(id).getData();
             AdditionalService map = this.modelMapperService.forDto().map(data, AdditionalService.class);
-            services.add(map);
-        }
 
-        System.out.println(createOrderedAdditionalServiceRequest.getAdditionalServices());
+            services.add(map);
+
+        }
 
         OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forRequest()
                 .map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
@@ -69,6 +73,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
 
         this.orderedAdditionalServiceDao.save(orderedAdditionalService);
+
         return new SuccessResult("Ordered Service saved.");
     }
 

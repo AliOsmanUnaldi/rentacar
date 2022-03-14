@@ -3,10 +3,13 @@ package com.turkcell.rentacar.entities.concretes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,4 +26,7 @@ public class IndividualCustomer extends Customer{
 
     @Column(name = "national_identity")
     private String nationalIdentity;
+
+    @OneToMany(mappedBy = "individualCustomer")
+    private List<Rent> rents;
 }

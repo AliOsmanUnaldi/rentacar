@@ -7,6 +7,7 @@ import com.turkcell.rentacar.business.requests.individualCustomerRequests.Delete
 import com.turkcell.rentacar.business.requests.individualCustomerRequests.UpdateIndividualCustomerRequest;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
+import com.turkcell.rentacar.entities.concretes.IndividualCustomer;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface IndividualCustomerService {
 
     Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest);
 
-    DataResult<IndividualCustomerByIdDto> getIndividualCustomerByUserId(int userId);
+    DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByUserId(int userId);
+
+    DataResult<IndividualCustomer> getIndividualCustomerByUserId(int userId);
 }

@@ -31,6 +31,7 @@ public class ColorsController {
 
     @GetMapping("/getbyid")
     public DataResult<ColorByIdDto> getById(@RequestParam(required = true) int colorId) throws BusinessException {
+
         return this.colorService.getByColorId(colorId);
     }
 
@@ -42,6 +43,7 @@ public class ColorsController {
 
     @PostMapping("/update")
     public Result update(@RequestBody UpdateColorRequest updateColorRequest) throws BusinessException {
+
         return this.colorService.update(updateColorRequest);
     }
 

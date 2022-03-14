@@ -20,6 +20,7 @@ public class CorporateCustomersController {
     private CorporateCustomerService corporateCustomerService;
 
     public CorporateCustomersController(CorporateCustomerService corporateCustomerService) {
+
         this.corporateCustomerService = corporateCustomerService;
     }
 
@@ -50,6 +51,6 @@ public class CorporateCustomersController {
     @GetMapping("/getIndividualCustomerByUserId")
     public DataResult<CorporateCustomerByIdDto> getIndividualCustomerByUserId(int userId){
 
-        return this.corporateCustomerService.getCorporateCustomerByUserId(userId);
+        return this.corporateCustomerService.getCorporateCustomerByIdDtoByUserId(userId);
     }
 }

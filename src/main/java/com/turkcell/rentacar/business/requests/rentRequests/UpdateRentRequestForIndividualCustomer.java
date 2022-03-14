@@ -4,16 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentRequest {
+public class UpdateRentRequestForIndividualCustomer {
+
+    @NotNull
+    private int rentId;
 
     @NotNull
     private LocalDate startDate;
@@ -26,13 +27,7 @@ public class CreateRentRequest {
 
     @NotNull
     @Positive
-    private Integer orderedAdditionalServiceId;
+    private Integer individualCustomer;
 
-    @NotNull
-    @Positive
-    private Integer rentedCity;
 
-    @NotNull
-    @Positive
-    private Integer deliveredCity;
 }

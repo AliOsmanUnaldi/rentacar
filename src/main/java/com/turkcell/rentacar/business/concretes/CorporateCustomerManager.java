@@ -25,6 +25,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
     private final ModelMapperService modelMapperService;
 
     public CorporateCustomerManager(CorporateCustomerDao corporateCustomerDao, ModelMapperService modelMapperService) {
+
         this.corporateCustomerDao = corporateCustomerDao;
         this.modelMapperService = modelMapperService;
     }
@@ -71,12 +72,18 @@ public class CorporateCustomerManager implements CorporateCustomerService {
     }
 
     @Override
-    public DataResult<CorporateCustomerByIdDto> getCorporateCustomerByUserId(int userId) {
+    public DataResult<CorporateCustomerByIdDto> getCorporateCustomerByIdDtoByUserId(int userId) {
 
         CorporateCustomer corporateCustomer = this.corporateCustomerDao.getById(userId);
 
         CorporateCustomerByIdDto response = this.modelMapperService.forDto().map(corporateCustomer, CorporateCustomerByIdDto.class);
 
         return new SuccessDataResult<CorporateCustomerByIdDto>(response,"Corporate customer found by given id : "+userId);
+    }
+
+    @Override
+    public DataResult<CorporateCustomer> getCorporateCustomerByUserId(int userId) {
+
+        return new SuccessDataResult<CorporateCustomer>(this.corporateCustomerDao.getById(userId));
     }
 }
