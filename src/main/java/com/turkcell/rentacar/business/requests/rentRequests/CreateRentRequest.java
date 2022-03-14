@@ -16,16 +16,6 @@ import java.time.LocalDate;
 public class CreateRentRequest {
 
     @NotNull
-    @NotBlank
-    @Size(min=2,max = 25)
-    private String rentedCity;
-
-    @NotNull
-    @NotBlank
-    @Size(min=2,max = 25)
-    private String deliveredCity;
-
-    @NotNull
     private LocalDate startDate;
 
     private LocalDate finishDate;
@@ -37,4 +27,12 @@ public class CreateRentRequest {
     @NotNull
     @Positive
     private Integer orderedAdditionalServiceId;
+
+    @NotNull
+    @Positive
+    private Integer rentedCity;
+
+    @NotNull
+    @Positive
+    private Integer deliveredCity;
 }

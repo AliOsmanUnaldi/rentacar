@@ -54,12 +54,16 @@ public class RentManager implements RentService {
 
     @Override
     public Result add(CreateRentRequest createRentRequest) throws BusinessException {
+
         checkIfCarIsInMaintenance(createRentRequest.getCarId());
 
         Rent rent = this.modelMapperService.forDto().map(createRentRequest, Rent.class);
         rent.setRentId(0);
+
         rent.setBill(calculatedCityBill(createRentRequest)+calculatedServiceBill(createRentRequest.getOrderedAdditionalServiceId()));
+
         this.rentDao.save(rent);
+
         return new SuccessResult("Rent is created");
     }
 
@@ -131,7 +135,7 @@ public class RentManager implements RentService {
 
     private double calculatedCityBill(CreateRentRequest createRentRequest) {
         double cityPayment = 0;
-        if(!createRentRequest.getRentedCity().equals(createRentRequest.getDeliveredCity())) {
+        if(createRentRequest.getRentedCity() != createRentRequest.getDeliveredCity()) {
             cityPayment = 750;
         }
         return cityPayment;

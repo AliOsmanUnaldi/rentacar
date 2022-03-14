@@ -28,18 +28,23 @@ public class ColorManager implements ColorService {
 
     @Override
     public DataResult<List<ColorListDto>> getAll() {
+
         List<Color> result = this.colorDao.findAll();
         List<ColorListDto> response = result.stream()
                 .map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
                 .collect(Collectors.toList());
+
         return new SuccessDataResult<List<ColorListDto>>(response, "Colors are listed successfully.");
     }
 
     @Override
     public Result add(CreateColorRequest createColorRequest) throws BusinessException {
+
         Color color = this.modelMapperService.forRequest().map(createColorRequest, Color.class);
         checkIfColorNameIsUnique(color.getColorName());
+
         this.colorDao.save(color);
+
         return new SuccessResult("Color is added.");
     }
 

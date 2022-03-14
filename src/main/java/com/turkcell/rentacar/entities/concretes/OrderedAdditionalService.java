@@ -38,6 +38,7 @@ public class OrderedAdditionalService {
             inverseJoinColumns = {
                     @JoinColumn(name = "additional_service_id"
                     )})
+
     private Set<AdditionalService> additionalServices;
 
     @OneToOne(mappedBy = "orderedAdditionalServices")

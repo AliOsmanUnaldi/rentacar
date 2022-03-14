@@ -19,11 +19,13 @@ public class Rent {
     @Column(name = "rent_id")
     private int rentId;
 
-    @Column(name = "rented_city")
-    private String rentedCity;
+    @ManyToOne
+    @JoinColumn(name = "rented_city_id",referencedColumnName = "id")
+    private City rentedCity;
 
-    @Column(name = "delivered_city")
-    private String deliveredCity;
+    @ManyToOne
+    @JoinColumn(name = "delivered_city_id",referencedColumnName = "id")
+    private City deliveredCity;
 
     @Column(name = "start_date")
     private LocalDate startDate;
