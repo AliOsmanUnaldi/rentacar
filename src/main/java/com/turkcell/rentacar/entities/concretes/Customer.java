@@ -12,4 +12,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "customers")
 public class Customer extends User{
+
+    @OneToMany(mappedBy = "customer")
+    private List<Invoice> invoices;
 }

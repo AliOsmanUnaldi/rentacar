@@ -32,7 +32,7 @@ public class Rent {
     private IndividualCustomer individualCustomer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_customer_id",referencedColumnName = "user_id", nullable = true)
+    @JoinColumn(name = "corporate_customer_id",referencedColumnName = "user_id")
     private CorporateCustomer corporateCustomer;
 
     @Column(name = "start_date")
@@ -41,9 +41,6 @@ public class Rent {
     @Column(name = "finish_date")
     private LocalDate finishDate;
 
-    @Column(name = "bill")
-    private double bill;
-
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
@@ -51,4 +48,5 @@ public class Rent {
     @OneToOne
     @JoinColumn(name = "ordered_additional_service_id")
     private OrderedAdditionalService orderedAdditionalServices;
+
 }

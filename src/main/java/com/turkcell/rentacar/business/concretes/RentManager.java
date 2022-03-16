@@ -31,12 +31,14 @@ public class RentManager implements RentService {
     private final OrderedAdditionalServiceService orderedAdditionalServiceService;
     private final IndividualCustomerService individualCustomerService;
     private final CorporateCustomerService corporateCustomerService;
+    private final InvoiceService invoiceService;
 
     public RentManager(RentDao rentDao, ModelMapperService modelMapperService,
                        @Lazy CarMaintenanceService carMaintenanceService,
                        @Lazy OrderedAdditionalServiceService orderedAdditionalServiceService,
                        @Lazy IndividualCustomerService individualCustomerService,
-                       @Lazy CorporateCustomerService corporateCustomerService) {
+                       @Lazy CorporateCustomerService corporateCustomerService,
+                       @Lazy InvoiceService invoiceService) {
 
         this.rentDao = rentDao;
         this.modelMapperService = modelMapperService;
@@ -44,6 +46,7 @@ public class RentManager implements RentService {
         this.orderedAdditionalServiceService = orderedAdditionalServiceService;
         this.individualCustomerService = individualCustomerService;
         this.corporateCustomerService = corporateCustomerService;
+        this.invoiceService = invoiceService;
     }
 
     @Override
@@ -62,12 +65,11 @@ public class RentManager implements RentService {
     @Override
     public Result addRentForIndividualCustomer(CreateRentRequestForIndividualCustomer createRentRequestForIndividualCustomer) throws BusinessException {
 
+
         checkIfCarIsInMaintenance(createRentRequestForIndividualCustomer.getCarId());
 
         Rent rent = this.modelMapperService.forDto().map(createRentRequestForIndividualCustomer, Rent.class);
         rent.setRentId(0);
-
-        rent.setBill(calculatedCityBillForIndividualCustomer(createRentRequestForIndividualCustomer)+calculatedServiceBill(createRentRequestForIndividualCustomer.getOrderedAdditionalServiceId()));
 
         IndividualCustomer individualCustomer = this.individualCustomerService.getIndividualCustomerByUserId(createRentRequestForIndividualCustomer
                 .getIndividualCustomer()).getData();
@@ -76,7 +78,7 @@ public class RentManager implements RentService {
 
         this.rentDao.save(rent);
 
-        return new SuccessResult("Rent is created for corporate customer.");
+        return new SuccessResult("Rent is created for individual customer.");
     }
 
     @Override
@@ -86,8 +88,6 @@ public class RentManager implements RentService {
 
         Rent rent = this.modelMapperService.forDto().map(createRentRequestForCorporateCustomer, Rent.class);
         rent.setRentId(0);
-
-        rent.setBill(calculatedCityBillForCorporateCustomer(createRentRequestForCorporateCustomer)+calculatedServiceBill(createRentRequestForCorporateCustomer.getOrderedAdditionalServiceId()));
 
         CorporateCustomer corporateCustomer = this.corporateCustomerService.getCorporateCustomerByUserId(createRentRequestForCorporateCustomer
                 .getCorporateCustomer()).getData();
@@ -100,7 +100,7 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public DataResult<RentByIdDto> getByRentId(int id) throws BusinessException {
+    public DataResult<RentByIdDto> getRentByIdDtoByRentId(int id) throws BusinessException {
 
         checkIfRentExists(id);
 
@@ -115,6 +115,7 @@ public class RentManager implements RentService {
     public Result updateRentForIndividualCustomer(UpdateRentRequestForIndividualCustomer updateRentRequestForIndividualCustomer) throws BusinessException {
 
         checkIfRentExists(updateRentRequestForIndividualCustomer.getRentId());
+        checkIfStartDayIsBeforeFinishDate(updateRentRequestForIndividualCustomer.getRentId());
 
         Rent rent = this.modelMapperService.forRequest().map(updateRentRequestForIndividualCustomer, Rent.class);
 
@@ -127,6 +128,7 @@ public class RentManager implements RentService {
     public Result updateRentForCorporateCustomer(UpdateRentRequestForCorporateCustomer updateRentRequestForCorporateCustomer) throws BusinessException {
 
         checkIfRentExists(updateRentRequestForCorporateCustomer.getRentId());
+        checkIfStartDayIsBeforeFinishDate(updateRentRequestForCorporateCustomer.getRentId());
 
         Rent rent = this.modelMapperService.forRequest().map(updateRentRequestForCorporateCustomer,Rent.class);
 
@@ -157,6 +159,12 @@ public class RentManager implements RentService {
         return new SuccessDataResult<List<RentListDto>>(response,"Rents are listed for chosen car.");
     }
 
+    @Override
+    public DataResult<Rent> getRentByRentId(int id) {
+
+        return new SuccessDataResult<Rent>(this.rentDao.getById(id));
+    }
+
     private void checkIfCarIsInMaintenance(int carId) throws BusinessException {
 
         DataResult<List<CarMaintenanceListDto>> result = this.carMaintenanceService.getByCarId(carId);
@@ -185,42 +193,13 @@ public class RentManager implements RentService {
         return true;
     }
 
-    private double calculatedServiceBill(Integer orderedAdditionalServiceId) throws BusinessException {
+   private boolean checkIfStartDayIsBeforeFinishDate(int rentId) throws BusinessException {
 
-        double lastBill = 0;
+       if(this.rentDao.getById(rentId).getStartDate().compareTo(this.rentDao.getById(rentId).getFinishDate()) >= 0){
 
-        OrderedAdditionalService orderedAdditionalService = this.orderedAdditionalServiceService
-                .getByIdAsEntity(orderedAdditionalServiceId);
+            throw new BusinessException("Start date cannot be later than finish date!");
 
-        for (AdditionalService additionalService : orderedAdditionalService.getAdditionalServices()) {
-            lastBill += additionalService.getAdditionalServiceDailyPrice();
-        }
-        return lastBill;
-    }
-
-    private double calculatedCityBillForIndividualCustomer(CreateRentRequestForIndividualCustomer createRentRequestForIndividualCustomer) {
-
-        double cityPayment = 0;
-
-        if(createRentRequestForIndividualCustomer.getRentedCity() != createRentRequestForIndividualCustomer.getDeliveredCity()) {
-
-            cityPayment = 750;
-
-        }
-
-        return cityPayment;
-    }
-
-    private double calculatedCityBillForCorporateCustomer(CreateRentRequestForCorporateCustomer createRentRequestForCorporateCustomer) {
-
-        double cityPayment = 0;
-
-        if(createRentRequestForCorporateCustomer.getRentedCity() != createRentRequestForCorporateCustomer.getDeliveredCity()) {
-
-            cityPayment = 750;
-
-        }
-
-        return cityPayment;
-    }
+       }
+       return true;
+   }
 }

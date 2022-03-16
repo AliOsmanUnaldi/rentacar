@@ -9,6 +9,7 @@ import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequestFor
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
+import com.turkcell.rentacar.entities.concretes.Rent;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface RentService {
 
     Result addRentForCorporateCustomer(CreateRentRequestForCorporateCustomer createRentRequestForCorporateCustomer) throws BusinessException;
 
-    DataResult<RentByIdDto> getByRentId(int id) throws BusinessException;
+    DataResult<RentByIdDto> getRentByIdDtoByRentId(int id) throws BusinessException;
 
     Result updateRentForIndividualCustomer(UpdateRentRequestForIndividualCustomer updateRentRequestForIndividualCustomer) throws BusinessException;
 
@@ -29,4 +30,6 @@ public interface RentService {
     Result deleteByRentId(int rentId) throws BusinessException;
 
     DataResult <List<RentListDto>> getAllRentsByCarId(int carId);
+
+    DataResult<Rent> getRentByRentId(int id);
 }

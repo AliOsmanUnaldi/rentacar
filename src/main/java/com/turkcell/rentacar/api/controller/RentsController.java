@@ -47,7 +47,7 @@ public class RentsController {
     @GetMapping("/getByRentId")
     public DataResult<RentByIdDto> getByRentId(@RequestParam int id) throws BusinessException {
 
-        return this.rentService.getByRentId(id);
+        return this.rentService.getRentByIdDtoByRentId(id);
     }
 
     @PutMapping("/updateRentForIndividualCustomer")
