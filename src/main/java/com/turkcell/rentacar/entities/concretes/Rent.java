@@ -27,13 +27,16 @@ public class Rent {
     @JoinColumn(name = "delivered_city_id",referencedColumnName = "id")
     private City deliveredCity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "individual_customer_id", referencedColumnName = "user_id", nullable = true)
-    private IndividualCustomer individualCustomer;
+    @Column(name = "start_kilometer")
+    private Integer startKilometer;
 
+    @Column(name = "finish_kilometer" )
+    private Integer finishKilometer;
+
+    //Çözüm Bul mantıklı değil!
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_customer_id",referencedColumnName = "user_id")
-    private CorporateCustomer corporateCustomer;
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    private Customer customer;
 
     @Column(name = "start_date")
     private LocalDate startDate;

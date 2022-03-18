@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class UpdateIndividualCustomerRequest {
 
     @NotNull
-    private int userId;
+    private int individualCustomerId;
 
     @NotNull
     @NotBlank
@@ -36,4 +37,7 @@ public class UpdateIndividualCustomerRequest {
     @NotNull
     @NotBlank
     private String nationalIdentity;
+
+    private LocalDate dateRegistered;
+
 }

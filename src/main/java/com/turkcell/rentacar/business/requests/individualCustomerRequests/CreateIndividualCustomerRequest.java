@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -33,4 +34,7 @@ public class CreateIndividualCustomerRequest {
     //@Min(11)
     //@Max(11)
     private String nationalIdentity;
+
+    private LocalDate dateRegistered;
+
 }

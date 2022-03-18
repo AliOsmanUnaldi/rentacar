@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,7 @@ public class UpdateCorporateCustomerRequest {
 
     @NotNull
     @Min(1)
-    private int userId;
+    private int corporateCustomerId;
 
     @NotNull
    // @Email
@@ -31,4 +32,7 @@ public class UpdateCorporateCustomerRequest {
     @NotNull
     @NotBlank
     private String taxNumber;
+
+    private LocalDate dateRegistered;
+
 }

@@ -58,7 +58,7 @@ public class InvoiceManager implements InvoiceService {
     public Result add(CreateInvoiceRequest createInvoiceRequest) throws BusinessException {
         
         Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceRequest,Invoice.class);
-        invoice.setCustomer(this.individualCustomerService.getIndividualCustomerByUserId(createInvoiceRequest.getCustomer()).getData());
+        invoice.setCustomer(this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createInvoiceRequest.getCustomer()).getData());
         invoice.setRent(this.rentService.getRentByRentId(createInvoiceRequest.getRent()).getData());
 
         invoice.setFinalPrice(calculatePriceForRentedDays(this.rentService.getRentByRentId(createInvoiceRequest.getRent()).getData())

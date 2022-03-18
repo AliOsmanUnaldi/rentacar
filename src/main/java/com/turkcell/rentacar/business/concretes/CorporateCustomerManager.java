@@ -72,7 +72,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
     }
 
     @Override
-    public DataResult<CorporateCustomerByIdDto> getCorporateCustomerByIdDtoByUserId(int userId) {
+    public DataResult<CorporateCustomerByIdDto> getCorporateCustomerByIdDtoByCorporateCustomerId(int userId) {
 
         CorporateCustomer corporateCustomer = this.corporateCustomerDao.getById(userId);
 
@@ -82,7 +82,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
     }
 
     @Override
-    public DataResult<CorporateCustomer> getCorporateCustomerByUserId(int userId) {
+    public DataResult<CorporateCustomer> getCorporateCustomerByCorporateCustomerId(int userId) {
 
         return new SuccessDataResult<CorporateCustomer>(this.corporateCustomerDao.getById(userId));
     }

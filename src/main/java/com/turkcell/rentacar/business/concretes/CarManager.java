@@ -117,6 +117,18 @@ public class CarManager implements CarService {
     }
 
     @Override
+    public Car getCarByCarId(int id) {
+
+        return this.carDao.getById(id);
+    }
+
+    @Override
+    public void saveChangesForCar(Car car) {
+
+        this.carDao.save(car);
+    }
+
+    @Override
     public DataResult<CarByIdDto> getByCarId(int carId) throws BusinessException {
 
         checkIfCarExists(carId);
@@ -127,6 +139,7 @@ public class CarManager implements CarService {
         return new SuccessDataResult<CarByIdDto>(response);
     }
 
+    @Override
     public boolean checkIfCarExists(int carId) throws BusinessException {
 
         if (!carDao.existsById(carId)){

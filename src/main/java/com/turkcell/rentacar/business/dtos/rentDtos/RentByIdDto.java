@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Data
@@ -25,4 +26,10 @@ public class RentByIdDto {
     private int carId;
 
     private int orderedAdditionalServiceId;
+
+    private Integer finishKilometer;
+
+    private Integer startKilometer;
+
+    private Integer customer;
 }

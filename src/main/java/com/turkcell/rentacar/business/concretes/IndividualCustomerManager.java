@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByUserId(int userId) {
+    public DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByIndividualCustomerId(int userId) {
 
         IndividualCustomer individualCustomer = this.individualCustomerDao.getById(userId);
 
@@ -82,7 +82,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public DataResult<IndividualCustomer> getIndividualCustomerByUserId(int userId) {
+    public DataResult<IndividualCustomer> getIndividualCustomerByIndividualCustomerId(int userId) {
 
         return new SuccessDataResult<IndividualCustomer>(this.individualCustomerDao.getById(userId));
     }

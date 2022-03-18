@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateRentRequestForIndividualCustomer {
+public class UpdateRentRequest {
 
     @NotNull
     private int rentId;
@@ -27,7 +27,11 @@ public class UpdateRentRequestForIndividualCustomer {
 
     @NotNull
     @Positive
-    private Integer individualCustomer;
+    private Integer customer;
 
+    @Positive
+    private Integer finishKilometer;
+
+    private Integer startKilometer;
 
 }

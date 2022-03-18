@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRentRequestForCorporateCustomer {
+public class CreateRentRequest {
 
     @NotNull
     private LocalDate startDate;
@@ -36,5 +36,9 @@ public class CreateRentRequestForCorporateCustomer {
 
     @NotNull
     @Positive
-    private Integer corporateCustomer;
+    private Integer customer;
+
+
+    private Integer startKilometer;
+
 }

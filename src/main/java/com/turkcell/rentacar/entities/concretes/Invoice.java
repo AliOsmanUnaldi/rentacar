@@ -38,7 +38,7 @@ public class Invoice {
     private double finalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

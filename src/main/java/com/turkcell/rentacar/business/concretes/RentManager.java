@@ -4,10 +4,8 @@ import com.turkcell.rentacar.business.abstracts.*;
 import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.turkcell.rentacar.business.dtos.rentDtos.RentByIdDto;
 import com.turkcell.rentacar.business.dtos.rentDtos.RentListDto;
-import com.turkcell.rentacar.business.requests.rentRequests.CreateRentRequestForCorporateCustomer;
-import com.turkcell.rentacar.business.requests.rentRequests.CreateRentRequestForIndividualCustomer;
-import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequestForCorporateCustomer;
-import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequestForIndividualCustomer;
+import com.turkcell.rentacar.business.requests.rentRequests.CreateRentRequest;
+import com.turkcell.rentacar.business.requests.rentRequests.UpdateRentRequest;
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
@@ -32,13 +30,15 @@ public class RentManager implements RentService {
     private final IndividualCustomerService individualCustomerService;
     private final CorporateCustomerService corporateCustomerService;
     private final InvoiceService invoiceService;
+    private final CarService carService;
 
     public RentManager(RentDao rentDao, ModelMapperService modelMapperService,
                        @Lazy CarMaintenanceService carMaintenanceService,
                        @Lazy OrderedAdditionalServiceService orderedAdditionalServiceService,
                        @Lazy IndividualCustomerService individualCustomerService,
                        @Lazy CorporateCustomerService corporateCustomerService,
-                       @Lazy InvoiceService invoiceService) {
+                       @Lazy InvoiceService invoiceService,
+                       CarService carService) {
 
         this.rentDao = rentDao;
         this.modelMapperService = modelMapperService;
@@ -47,6 +47,7 @@ public class RentManager implements RentService {
         this.individualCustomerService = individualCustomerService;
         this.corporateCustomerService = corporateCustomerService;
         this.invoiceService = invoiceService;
+        this.carService = carService;
     }
 
     @Override
@@ -63,18 +64,17 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public Result addRentForIndividualCustomer(CreateRentRequestForIndividualCustomer createRentRequestForIndividualCustomer) throws BusinessException {
+    public Result addRentForIndividualCustomer(CreateRentRequest createRentRequest) throws BusinessException {
 
 
-        checkIfCarIsInMaintenance(createRentRequestForIndividualCustomer.getCarId());
+        checkIfCarIsInMaintenance(createRentRequest.getCarId());
 
-        Rent rent = this.modelMapperService.forDto().map(createRentRequestForIndividualCustomer, Rent.class);
+        Rent rent = this.modelMapperService.forDto().map(createRentRequest, Rent.class);
         rent.setRentId(0);
 
-        IndividualCustomer individualCustomer = this.individualCustomerService.getIndividualCustomerByUserId(createRentRequestForIndividualCustomer
-                .getIndividualCustomer()).getData();
-        rent.setIndividualCustomer(individualCustomer);
-        rent.setCorporateCustomer(null);
+        IndividualCustomer individualCustomer = this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createRentRequest
+                .getCustomer()).getData();
+        rent.setCustomer(individualCustomer);
 
         this.rentDao.save(rent);
 
@@ -82,17 +82,16 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public Result addRentForCorporateCustomer(CreateRentRequestForCorporateCustomer createRentRequestForCorporateCustomer) throws BusinessException {
+    public Result addRentForCorporateCustomer(CreateRentRequest createRentRequest) throws BusinessException {
 
-        checkIfCarIsInMaintenance(createRentRequestForCorporateCustomer.getCarId());
+        checkIfCarIsInMaintenance(createRentRequest.getCarId());
 
-        Rent rent = this.modelMapperService.forDto().map(createRentRequestForCorporateCustomer, Rent.class);
+        Rent rent = this.modelMapperService.forDto().map(createRentRequest, Rent.class);
         rent.setRentId(0);
 
-        CorporateCustomer corporateCustomer = this.corporateCustomerService.getCorporateCustomerByUserId(createRentRequestForCorporateCustomer
-                .getCorporateCustomer()).getData();
-        rent.setCorporateCustomer(corporateCustomer);
-        rent.setIndividualCustomer(null);
+        CorporateCustomer corporateCustomer = this.corporateCustomerService.getCorporateCustomerByCorporateCustomerId(createRentRequest
+                .getCustomer()).getData();
+        rent.setCustomer(corporateCustomer);
 
         this.rentDao.save(rent);
 
@@ -112,12 +111,23 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public Result updateRentForIndividualCustomer(UpdateRentRequestForIndividualCustomer updateRentRequestForIndividualCustomer) throws BusinessException {
+    public Result updateRentForIndividualCustomer(UpdateRentRequest updateRentRequest) throws BusinessException {
 
-        checkIfRentExists(updateRentRequestForIndividualCustomer.getRentId());
-        checkIfStartDayIsBeforeFinishDate(updateRentRequestForIndividualCustomer.getRentId());
+        checkIfRentExists(updateRentRequest.getRentId());
+        checkIfStartDayIsBeforeFinishDate(updateRentRequest.getRentId());
 
-        Rent rent = this.modelMapperService.forRequest().map(updateRentRequestForIndividualCustomer, Rent.class);
+        Rent rent = this.modelMapperService.forRequest().map(updateRentRequest, Rent.class);
+
+        rent.setStartKilometer(updateRentRequest.getStartKilometer());
+        rent.setFinishKilometer(updateRentRequest.getFinishKilometer());
+
+        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())){
+
+            Car car = this.carService.getCarByCarId(updateRentRequest.getCarId());
+            car.setKilometerInfo(updateRentRequest.getFinishKilometer());
+            this.carService.saveChangesForCar(car);
+
+        }
 
         this.rentDao.save(rent);
 
@@ -125,12 +135,23 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public Result updateRentForCorporateCustomer(UpdateRentRequestForCorporateCustomer updateRentRequestForCorporateCustomer) throws BusinessException {
+    public Result updateRentForCorporateCustomer(UpdateRentRequest updateRentRequest) throws BusinessException {
 
-        checkIfRentExists(updateRentRequestForCorporateCustomer.getRentId());
-        checkIfStartDayIsBeforeFinishDate(updateRentRequestForCorporateCustomer.getRentId());
+        checkIfRentExists(updateRentRequest.getRentId());
+        checkIfStartDayIsBeforeFinishDate(updateRentRequest.getRentId());
 
-        Rent rent = this.modelMapperService.forRequest().map(updateRentRequestForCorporateCustomer,Rent.class);
+        Rent rent = this.modelMapperService.forRequest().map(updateRentRequest,Rent.class);
+
+        rent.setStartKilometer(updateRentRequest.getStartKilometer());
+        rent.setFinishKilometer(updateRentRequest.getFinishKilometer());
+
+        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())){
+
+            Car car = this.carService.getCarByCarId(updateRentRequest.getCarId());
+            car.setKilometerInfo(updateRentRequest.getFinishKilometer());
+            this.carService.saveChangesForCar(car);
+
+        }
 
         this.rentDao.save(rent);
 
@@ -201,5 +222,15 @@ public class RentManager implements RentService {
 
        }
        return true;
+   }
+
+   private boolean checkIfFinishKmIsZeroOrNull(Integer kmInfo){
+
+        if (kmInfo == 0 || kmInfo == null){
+
+            return true;
+        }
+
+        return false;
    }
 }

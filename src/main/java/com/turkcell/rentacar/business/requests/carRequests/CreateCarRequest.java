@@ -27,4 +27,6 @@ public class CreateCarRequest {
 
     @NotNull
     private int colorId;
+
+    private int kilometerInfo;
 }

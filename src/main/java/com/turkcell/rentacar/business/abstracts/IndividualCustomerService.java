@@ -21,7 +21,7 @@ public interface IndividualCustomerService {
 
     Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest);
 
-    DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByUserId(int userId);
+    DataResult<IndividualCustomerByIdDto> getIndividualCustomerByIdDtoByIndividualCustomerId(int userId);
 
-    DataResult<IndividualCustomer> getIndividualCustomerByUserId(int userId);
+    DataResult<IndividualCustomer> getIndividualCustomerByIndividualCustomerId(int userId);
 }
