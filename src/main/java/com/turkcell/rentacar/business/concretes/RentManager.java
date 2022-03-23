@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.*;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.carMaintenanceDtos.CarMaintenanceListDto;
 import com.turkcell.rentacar.business.dtos.rentDtos.RentByIdDto;
 import com.turkcell.rentacar.business.dtos.rentDtos.RentListDto;
@@ -186,6 +187,12 @@ public class RentManager implements RentService {
         return new SuccessDataResult<Rent>(this.rentDao.getById(id));
     }
 
+    @Override
+    public Rent save(Rent rent) {
+        this.rentDao.save(rent);
+        return rent;
+    }
+
     private void checkIfCarIsInMaintenance(int carId) throws BusinessException {
 
         DataResult<List<CarMaintenanceListDto>> result = this.carMaintenanceService.getByCarId(carId);
@@ -208,7 +215,7 @@ public class RentManager implements RentService {
 
         if (!rentDao.existsById(rentId)){
 
-            throw new BusinessException("Rent does not exist with id: ' "+rentId+" '.");
+            throw new BusinessException(BusinessMessages.RENT_NOT_FOUND);
 
         }
         return true;

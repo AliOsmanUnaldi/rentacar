@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,9 +34,8 @@ public class Rent {
     @Column(name = "finish_kilometer" )
     private Integer finishKilometer;
 
-    //Çözüm Bul mantıklı değil!
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "user_id")
     private Customer customer;
 
     @Column(name = "start_date")
@@ -51,5 +51,8 @@ public class Rent {
     @OneToOne
     @JoinColumn(name = "ordered_additional_service_id")
     private OrderedAdditionalService orderedAdditionalServices;
+
+    @OneToMany(mappedBy = "rent")
+    private List<Invoice> invoices;
 
 }

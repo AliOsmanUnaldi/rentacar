@@ -30,5 +30,5 @@ public class RentListDto {
 
     private Integer startKilometer;
 
-    private Integer customer;
+    private Integer customerId;
 }

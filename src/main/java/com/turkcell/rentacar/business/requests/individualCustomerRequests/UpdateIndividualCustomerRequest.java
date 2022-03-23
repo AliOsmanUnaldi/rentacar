@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class UpdateIndividualCustomerRequest {
 
     @NotNull
-    private int individualCustomerId;
+    private int userId;
 
     @NotNull
     @NotBlank

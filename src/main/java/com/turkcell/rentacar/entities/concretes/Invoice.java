@@ -19,7 +19,7 @@ public class Invoice {
     @Column(name = "invoice_id")
     private int invoiceId;
 
-    @Column(name = "invoice_number",unique = true)
+    @Column(name = "invoice_number")
     private String invoiceNumber;
 
     @Column(name = "creation_date")
@@ -38,9 +38,13 @@ public class Invoice {
     private double finalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "user_id")
     private Customer customer;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rent_id",referencedColumnName = "rent_id")
     private Rent rent;
+
+    @ManyToOne
+    private Payment payment;
 }

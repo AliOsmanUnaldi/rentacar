@@ -1,5 +1,6 @@
 package com.turkcell.rentacar.business.concretes;
 
+import com.turkcell.rentacar.business.abstracts.CarService;
 import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
 import com.turkcell.rentacar.business.abstracts.InvoiceService;
 import com.turkcell.rentacar.business.abstracts.RentService;
@@ -32,13 +33,16 @@ public class InvoiceManager implements InvoiceService {
     private final ModelMapperService modelMapperService;
     private final RentService rentService;
     private final IndividualCustomerService individualCustomerService;
+    private final CarService carService;
 
     public InvoiceManager(InvoiceDao invoiceDao, ModelMapperService modelMapperService, @Lazy RentService rentService,
-                          @Lazy IndividualCustomerService individualCustomerService) {
+                          @Lazy IndividualCustomerService individualCustomerService,
+                          CarService carService) {
         this.invoiceDao = invoiceDao;
         this.modelMapperService = modelMapperService;
         this.rentService = rentService;
         this.individualCustomerService = individualCustomerService;
+        this.carService = carService;
     }
 
     @Override
@@ -110,9 +114,21 @@ public class InvoiceManager implements InvoiceService {
         return new SuccessDataResult<InvoiceByIdDto>(response,"Invoice is found by id: "+invoiceId+".");
     }
 
+    @Override
+    public Invoice save(Invoice invoice) {
+
+        invoice.setFinalPrice(calculatePriceForRentedDays(this.rentService.getRentByRentId(invoice.getRent().getRentId()).getData())
+                +calculateThePriceIfCarDeliveredToDiffrentCity(this.rentService.getRentByRentId(invoice.getRent().getRentId()).getData())
+                +calculatePriceIfAdditionalServicesAreDemanded(this.rentService.getRentByRentId(invoice.getRent().getRentId()).getData()));
+        invoice.setCreationDate(LocalDate.now());
+
+        this.invoiceDao.save(invoice);
+        return invoice;
+    }
+
     private double calculatePriceForRentedDays(Rent rent){
 
-        return rent.getFinishDate().compareTo(rent.getStartDate())*rent.getCar().getDailyPrice();
+        return rent.getFinishDate().compareTo(rent.getStartDate())*this.carService.getCarByCarId(rent.getCar().getCarId()).getDailyPrice();
     }
 
     private double calculateThePriceIfCarDeliveredToDiffrentCity(Rent rent){

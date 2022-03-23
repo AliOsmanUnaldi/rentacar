@@ -11,15 +11,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-@PrimaryKeyJoinColumn(name = "customer_id", referencedColumnName = "user_id")
 @Table(name = "customers")
 public class Customer extends User{
-
-    @Column(name = "customer_id", insertable = false, updatable = false)
-    private int customerId;
-
-    @Column(name = "date_registered")
-    private LocalDate dateRegistered;
 
     @OneToMany(mappedBy = "customer")
     private List<Invoice> invoices;

@@ -110,4 +110,11 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
         return this.orderedAdditionalServiceDao.getById(id);
     }
 
+    @Override
+    public OrderedAdditionalService save(OrderedAdditionalService orderedAdditionalService) {
+        this.orderedAdditionalServiceDao.save(orderedAdditionalService);
+        return orderedAdditionalService;
+    }
+
+
 }

@@ -23,4 +23,6 @@ public interface InvoiceService {
     Result delete(DeleteInvoiceRequest deleteInvoiceRequest);
 
     DataResult<InvoiceByIdDto> getInvoiceDtoByInvoiceId(int invoiceId);
+
+    Invoice save(Invoice invoice);
 }

@@ -8,6 +8,7 @@ import com.turkcell.rentacar.business.requests.additionalServiceRequests.UpdateA
 import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
+import com.turkcell.rentacar.entities.concretes.AdditionalService;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public interface AdditionalServiceService {
     Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) throws BusinessException;
 
     Result delete(DeleteAdditionalServiceRequest deleteAdditionalServiceRequest) throws BusinessException;
+
+    AdditionalService getAdditionalServiceByAdditionalService(int id);
 
 
 }

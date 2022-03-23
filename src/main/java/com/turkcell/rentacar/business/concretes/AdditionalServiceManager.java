@@ -87,6 +87,10 @@ public class AdditionalServiceManager implements AdditionalServiceService{
         return new SuccessResult("Service deleted.");
     }
 
+    @Override
+    public AdditionalService getAdditionalServiceByAdditionalService(int id) {
+        return this.additionalServiceDao.getById(id);
+    }
 
 
 }

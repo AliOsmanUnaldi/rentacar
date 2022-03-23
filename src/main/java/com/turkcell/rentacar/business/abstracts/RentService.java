@@ -30,4 +30,6 @@ public interface RentService {
     DataResult <List<RentListDto>> getAllRentsByCarId(int carId);
 
     DataResult<Rent> getRentByRentId(int id);
+
+    Rent save(Rent rent);
 }

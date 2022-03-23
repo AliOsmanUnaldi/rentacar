@@ -25,4 +25,7 @@ public interface OrderedAdditionalServiceService {
     Result delete(DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest) throws BusinessException;
 
     OrderedAdditionalService getByIdAsEntity (int id);
+
+    OrderedAdditionalService save(OrderedAdditionalService orderedAdditionalService);
+
 }

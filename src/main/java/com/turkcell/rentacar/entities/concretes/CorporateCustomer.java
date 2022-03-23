@@ -11,12 +11,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@PrimaryKeyJoinColumn(name = "corporate_customer_id", referencedColumnName = "customer_id")
 @Table(name = "corporate_customers")
 public class CorporateCustomer extends Customer{
-
-    @Column(name = "corporate_customer_id", insertable = false, updatable = false)
-    private int corporateCustomerId;
 
     @Column(name = "company_name")
     private String companyName;

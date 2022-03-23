@@ -14,7 +14,7 @@ public class UpdateCorporateCustomerRequest {
 
     @NotNull
     @Min(1)
-    private int corporateCustomerId;
+    private int userId;
 
     @NotNull
    // @Email

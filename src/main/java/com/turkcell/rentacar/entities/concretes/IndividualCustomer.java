@@ -12,12 +12,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@PrimaryKeyJoinColumn(name = "individual_customer_id", referencedColumnName = "customer_id")
 @Table(name = "individual_customers")
 public class IndividualCustomer extends Customer{
-
-    @Column(name = "individual_customer_id", insertable = false, updatable = false)
-    private int individualCustomerId;
 
     @Column(name = "first_name")
     private String firstName;
