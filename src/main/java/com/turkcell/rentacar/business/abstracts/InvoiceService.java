@@ -24,5 +24,5 @@ public interface InvoiceService {
 
     DataResult<InvoiceByIdDto> getInvoiceDtoByInvoiceId(int invoiceId);
 
-    Invoice save(Invoice invoice);
+    Invoice save(Invoice invoice) throws BusinessException;
 }

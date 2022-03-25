@@ -46,7 +46,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
 
         List<CarDamageRecord> result = this.carDamageRecordDao.findAll();
         List<CarDamageRecordListDto> response = result.stream()
-                .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord,CarDamageRecordListDto.class))
+                .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord, CarDamageRecordListDto.class))
                 .collect(Collectors.toList());
 
         return new SuccessDataResult<List<CarDamageRecordListDto>>(response, BusinessMessages.CarDamageRecordMessages.CAR_DAMAGES_LISTED);
@@ -57,7 +57,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
 
         this.carService.checkIfCarExists(createCarDamageRecordRequest.getCar());
 
-        CarDamageRecord carDamageRecord = this.modelMapperService.forRequest().map(createCarDamageRecordRequest,CarDamageRecord.class);
+        CarDamageRecord carDamageRecord = this.modelMapperService.forRequest().map(createCarDamageRecordRequest, CarDamageRecord.class);
         carDamageRecord.setCar(this.carService.getCarByCarId(createCarDamageRecordRequest.getCar()));
 
         Car car = this.carService.getCarByCarId(createCarDamageRecordRequest.getCar());
@@ -76,7 +76,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
         checkIfCarDamageRecordExists(updateCarDamageRecordRequest.getId());
         this.carService.checkIfCarExists(updateCarDamageRecordRequest.getCar());
 
-        CarDamageRecord carDamageRecord = this.modelMapperService.forRequest().map(updateCarDamageRecordRequest,CarDamageRecord.class);
+        CarDamageRecord carDamageRecord = this.modelMapperService.forRequest().map(updateCarDamageRecordRequest, CarDamageRecord.class);
 
         Car car = this.carService.getCarByCarId(updateCarDamageRecordRequest.getCar());
         car.getCarDamageRecords().add(carDamageRecord);
@@ -90,6 +90,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
     @Override
     public Result delete(DeleteCarDamageRecordRequest deleteCarDamageRecordRequest) throws BusinessException {
 
+        this.carService.checkIfCarExists(this.carDamageRecordDao.getById(deleteCarDamageRecordRequest.getId()).getCar().getCarId());
         checkIfCarDamageRecordExists(deleteCarDamageRecordRequest.getId());
 
         this.carDamageRecordDao.deleteById(deleteCarDamageRecordRequest.getId());
@@ -100,23 +101,26 @@ public class CarDamageRecordManager implements CarDamageRecordService {
     @Override
     public DataResult<CarDamageRecordByIdDto> getCarDamageRecordByIdDtoByCarDamageRecordId(int id) throws BusinessException {
 
+        this.carService.checkIfCarExists(this.carDamageRecordDao.getById(id).getCar().getCarId());
         checkIfCarDamageRecordExists(id);
 
         CarDamageRecord carDamageRecord = this.carDamageRecordDao.getById(id);
         CarDamageRecordByIdDto response = this.modelMapperService.forDto().map(carDamageRecord, CarDamageRecordByIdDto.class);
 
-        return new SuccessDataResult<CarDamageRecordByIdDto>(response,BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_FOUND);
+        return new SuccessDataResult<CarDamageRecordByIdDto>(response, BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_FOUND);
     }
 
     @Override
-    public DataResult<List<CarDamageRecordListDto>> getCarDamageRecordsByCarId(int carId) {
+    public DataResult<List<CarDamageRecordListDto>> getCarDamageRecordsByCarId(int carId) throws BusinessException {
+
+        this.carService.checkIfCarExists(carId);
 
         List<CarDamageRecord> carDamageRecordList = this.carDamageRecordDao.getCarDamageRecordByCar_CarId(carId);
         List<CarDamageRecordListDto> response = carDamageRecordList.stream()
-                .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord,CarDamageRecordListDto.class))
+                .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord, CarDamageRecordListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CarDamageRecordListDto>>(response,BusinessMessages.CarDamageRecordMessages.CAR_DAMAGES_FOUND_BY_CAR_ID);
+        return new SuccessDataResult<List<CarDamageRecordListDto>>(response, BusinessMessages.CarDamageRecordMessages.CAR_DAMAGES_FOUND_BY_CAR_ID);
     }
 
     @Override
@@ -126,8 +130,8 @@ public class CarDamageRecordManager implements CarDamageRecordService {
 
         double totalAmountOfCarDamageRecords = 0;
 
-        for (CarDamageRecordListDto carDamageRecordListDto:getCarDamageRecordsByCarId(carId).getData()
-             ) {
+        for (CarDamageRecordListDto carDamageRecordListDto : getCarDamageRecordsByCarId(carId).getData()
+        ) {
             totalAmountOfCarDamageRecords += carDamageRecordListDto.getAmountOfDamageAsFinancial();
         }
 
@@ -136,7 +140,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
 
     private boolean checkIfCarDamageRecordExists(int id) throws BusinessException {
 
-        if (!this.carDamageRecordDao.existsById(id)){
+        if (!this.carDamageRecordDao.existsById(id)) {
 
             throw new BusinessException(BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_DOES_NOT_EXIST);
 

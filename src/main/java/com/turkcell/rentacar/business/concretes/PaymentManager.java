@@ -37,14 +37,14 @@ public class PaymentManager implements PaymentService {
     private RentService rentService;
     private InvoiceService invoiceService;
     private AdditionalServiceService additionalServiceService;
-    private IndividualCustomerService individualCustomerService;
+    private CustomerService customerService;
     private PosService posService;
     private CityService cityService;
 
     @Autowired
     public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService, @Lazy OrderedAdditionalServiceService orderedAdditionalServiceService,
                           @Lazy RentService rentService, @Lazy InvoiceService invoiceService,
-                          @Lazy AdditionalServiceService additionalServiceService,@Lazy IndividualCustomerService individualCustomerService,
+                          @Lazy AdditionalServiceService additionalServiceService, @Lazy CustomerService customerService,
                           PosService posService, CityService cityService) {
         this.paymentDao = paymentDao;
         this.modelMapperService = modelMapperService;
@@ -52,7 +52,7 @@ public class PaymentManager implements PaymentService {
         this.rentService = rentService;
         this.invoiceService = invoiceService;
         this.additionalServiceService = additionalServiceService;
-        this.individualCustomerService = individualCustomerService;
+        this.customerService = customerService;
         this.posService = posService;
         this.cityService = cityService;
 
@@ -61,7 +61,7 @@ public class PaymentManager implements PaymentService {
     @Override
     public Result add(CreatePaymentRequest createPaymentRequest) throws BusinessException {
 
-        if (!posService.makePayment(createPaymentRequest.getCardNumber(),createPaymentRequest.getCardOwner(), createPaymentRequest.getCvc(), createPaymentRequest.getCardExpiryDate())){
+        if (!posService.makePayment(createPaymentRequest.getCardNumber(), createPaymentRequest.getCardOwner(), createPaymentRequest.getCvc(), createPaymentRequest.getCardExpiryDate())) {
             throw new BusinessException(BusinessMessages.PaymentMessages.PAYMENT_FAILED);
         }
 
@@ -75,43 +75,44 @@ public class PaymentManager implements PaymentService {
 
         List<Payment> result = this.paymentDao.findAll();
         List<PaymentListDto> response = result.stream()
-                .map(payment -> this.modelMapperService.forDto().map(payment,PaymentListDto.class))
+                .map(payment -> this.modelMapperService.forDto().map(payment, PaymentListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<PaymentListDto>>(response,BusinessMessages.PaymentMessages.PAYMENTS_LISTED);
+        return new SuccessDataResult<List<PaymentListDto>>(response, BusinessMessages.PaymentMessages.PAYMENTS_LISTED);
     }
 
     @Override
     public DataResult<PaymentByIdDto> getPaymentDtosByPaymentId(int id) {
 
         Payment payment = this.paymentDao.getById(id);
-        PaymentByIdDto response = this.modelMapperService.forDto().map(payment,PaymentByIdDto.class);
+        PaymentByIdDto response = this.modelMapperService.forDto().map(payment, PaymentByIdDto.class);
 
-        return new SuccessDataResult<PaymentByIdDto>(response,BusinessMessages.PaymentMessages.PAYMENT_FOUND);
+        return new SuccessDataResult<PaymentByIdDto>(response, BusinessMessages.PaymentMessages.PAYMENT_FOUND);
     }
 
     @Override
     public DataResult<List<PaymentByCustomerIdDto>> getPaymentDtoSByCustomerId(int customerId) {
 
+
         List<Payment> result = this.paymentDao.getAllByRent_Customer_UserId(customerId);
         List<PaymentByCustomerIdDto> response = result.stream()
-                .map(payment -> this.modelMapperService.forDto().map(payment,PaymentByCustomerIdDto.class))
+                .map(payment -> this.modelMapperService.forDto().map(payment, PaymentByCustomerIdDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<PaymentByCustomerIdDto>>(response,BusinessMessages.PaymentMessages.PAYMENT_FOUND_BY_CUSOMER);
+        return new SuccessDataResult<List<PaymentByCustomerIdDto>>(response, BusinessMessages.PaymentMessages.PAYMENT_FOUND_BY_CUSOMER);
     }
 
     @Transactional
-    public  void runPaymentSuccessor(CreatePaymentRequest createPaymentRequest){
+    public void runPaymentSuccessor(CreatePaymentRequest createPaymentRequest) throws BusinessException {
 
         CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest = createPaymentRequest
                 .getCreateOrderedAdditionalServiceRequest();
 
         OrderedAdditionalService orderedAdditionalService = this.modelMapperService.forRequest()
-                .map(createOrderedAdditionalServiceRequest,OrderedAdditionalService.class);
+                .map(createOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
 
         Set<AdditionalService> a = new HashSet<>();
-        for (Integer b:createOrderedAdditionalServiceRequest.getAdditionalServices()
+        for (Integer b : createOrderedAdditionalServiceRequest.getAdditionalServices()
         ) {
             a.add(this.additionalServiceService.getAdditionalServiceByAdditionalService(b));
         }
@@ -120,9 +121,9 @@ public class PaymentManager implements PaymentService {
         this.orderedAdditionalServiceService.save(orderedAdditionalService);
 
         CreateRentForPaymentRequest createRentForPaymentRequest = createPaymentRequest.getCreateRentForPaymentRequest();
-        Rent rent = this.modelMapperService.forRequest().map(createRentForPaymentRequest,Rent.class);
+        Rent rent = this.modelMapperService.forRequest().map(createRentForPaymentRequest, Rent.class);
         rent.setOrderedAdditionalServices(orderedAdditionalService);
-        rent.setCustomer(this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createRentForPaymentRequest.getCustomer()).getData());
+        rent.setCustomer(this.customerService.getCustomerByCustomerId(createRentForPaymentRequest.getCustomer()));
         rent.setRentId(0);
         rent.setStartDate(createRentForPaymentRequest.getStartDate());
         rent.setFinishDate(createRentForPaymentRequest.getFinishDate());
@@ -135,16 +136,16 @@ public class PaymentManager implements PaymentService {
         List<Invoice> invoices = new ArrayList<Invoice>(createInvoiceForPaymentRequestList.size());
 
         double price = 0;
-        for (int i=0;i<createInvoiceForPaymentRequestList.size();i++) {
-            Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceForPaymentRequestList.get(i),Invoice.class);
+        for (int i = 0; i < createInvoiceForPaymentRequestList.size(); i++) {
+            Invoice invoice = this.modelMapperService.forRequest().map(createInvoiceForPaymentRequestList.get(i), Invoice.class);
             invoice.setRent(rent);
-            invoice.setCustomer(this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(rent.getCustomer().getUserId()).getData());
+            invoice.setCustomer(this.customerService.getCustomerByCustomerId(rent.getCustomer().getUserId()));
             this.invoiceService.save(invoice);
             invoices.add(invoice);
             price += invoice.getFinalPrice();
         }
 
-        Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest,Payment.class);
+        Payment payment = this.modelMapperService.forRequest().map(createPaymentRequest, Payment.class);
         payment.setTotalPrice(price);
         payment.setOrderedAdditionalService(orderedAdditionalService);
         payment.setRent(rent);

@@ -23,7 +23,7 @@ public interface CarDamageRecordService {
 
     DataResult<CarDamageRecordByIdDto> getCarDamageRecordByIdDtoByCarDamageRecordId(int id) throws BusinessException;
 
-    DataResult<List<CarDamageRecordListDto>> getCarDamageRecordsByCarId(int carId);
+    DataResult<List<CarDamageRecordListDto>> getCarDamageRecordsByCarId(int carId) throws BusinessException;
 
     DataResult getTotalCarDamageRecordByCarId(int carId) throws BusinessException;
 }

@@ -27,11 +27,11 @@ public interface RentService {
 
     Result deleteByRentId(int rentId) throws BusinessException;
 
-    DataResult <List<RentListDto>> getAllRentsByCarId(int carId);
+    DataResult <List<RentListDto>> getAllRentsByCarId(int carId) throws BusinessException;
 
-    DataResult<Rent> getRentByRentId(int id);
+    DataResult<Rent> getRentByRentId(int id) throws BusinessException;
 
-    Rent save(Rent rent);
+    Rent save(Rent rent) throws BusinessException;
 
     boolean checkIfRentExists(int rentId) throws BusinessException;
 }

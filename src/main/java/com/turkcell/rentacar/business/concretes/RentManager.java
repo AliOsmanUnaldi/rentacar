@@ -14,7 +14,10 @@ import com.turkcell.rentacar.core.utilities.results.Result;
 import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.RentDao;
-import com.turkcell.rentacar.entities.concretes.*;
+import com.turkcell.rentacar.entities.concretes.Car;
+import com.turkcell.rentacar.entities.concretes.CarMaintenance;
+import com.turkcell.rentacar.entities.concretes.Customer;
+import com.turkcell.rentacar.entities.concretes.Rent;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,7 @@ public class RentManager implements RentService {
     private final OrderedAdditionalServiceService orderedAdditionalServiceService;
     private final IndividualCustomerService individualCustomerService;
     private final CorporateCustomerService corporateCustomerService;
+    private final CustomerService customerService;
     private final InvoiceService invoiceService;
     private final CarService carService;
 
@@ -40,6 +44,7 @@ public class RentManager implements RentService {
                        @Lazy IndividualCustomerService individualCustomerService,
                        @Lazy CorporateCustomerService corporateCustomerService,
                        @Lazy InvoiceService invoiceService,
+                       @Lazy CustomerService customerService,
                        CarService carService) {
 
         this.rentDao = rentDao;
@@ -49,6 +54,7 @@ public class RentManager implements RentService {
         this.individualCustomerService = individualCustomerService;
         this.corporateCustomerService = corporateCustomerService;
         this.invoiceService = invoiceService;
+        this.customerService = customerService;
         this.carService = carService;
     }
 
@@ -74,9 +80,11 @@ public class RentManager implements RentService {
         Rent rent = this.modelMapperService.forDto().map(createRentRequest, Rent.class);
         rent.setRentId(0);
 
-        IndividualCustomer individualCustomer = this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createRentRequest
+        Customer individualCustomer = this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createRentRequest
                 .getCustomer()).getData();
         rent.setCustomer(individualCustomer);
+
+        checkIfAnyRelatedModelExist(rent);
 
         this.rentDao.save(rent);
 
@@ -89,11 +97,14 @@ public class RentManager implements RentService {
         checkIfCarIsInMaintenance(createRentRequest.getCarId());
 
         Rent rent = this.modelMapperService.forDto().map(createRentRequest, Rent.class);
+
         rent.setRentId(0);
 
-        CorporateCustomer corporateCustomer = this.corporateCustomerService.getCorporateCustomerByCorporateCustomerId(createRentRequest
+        Customer corporateCustomer = this.corporateCustomerService.getCorporateCustomerByCorporateCustomerId(createRentRequest
                 .getCustomer()).getData();
         rent.setCustomer(corporateCustomer);
+
+        checkIfAnyRelatedModelExist(rent);
 
         this.rentDao.save(rent);
 
@@ -107,9 +118,11 @@ public class RentManager implements RentService {
 
         Rent rent = this.rentDao.getById(id);
 
+        checkIfAnyRelatedModelExist(rent);
+
         RentByIdDto response = this.modelMapperService.forDto().map(rent, RentByIdDto.class);
 
-        return new SuccessDataResult<RentByIdDto>(response,BusinessMessages.RentMessages.RENT_FOUND);
+        return new SuccessDataResult<RentByIdDto>(response, BusinessMessages.RentMessages.RENT_FOUND);
     }
 
     @Override
@@ -123,13 +136,15 @@ public class RentManager implements RentService {
         rent.setStartKilometer(updateRentRequest.getStartKilometer());
         rent.setFinishKilometer(updateRentRequest.getFinishKilometer());
 
-        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())){
+        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())) {
 
             Car car = this.carService.getCarByCarId(updateRentRequest.getCarId());
             car.setKilometerInfo(updateRentRequest.getFinishKilometer());
             this.carService.saveChangesForCar(car);
 
         }
+
+        checkIfAnyRelatedModelExist(rent);
 
         this.rentDao.save(rent);
 
@@ -142,18 +157,20 @@ public class RentManager implements RentService {
         checkIfRentExists(updateRentRequest.getRentId());
         checkIfStartDayIsBeforeFinishDate(updateRentRequest.getRentId());
 
-        Rent rent = this.modelMapperService.forRequest().map(updateRentRequest,Rent.class);
+        Rent rent = this.modelMapperService.forRequest().map(updateRentRequest, Rent.class);
 
         rent.setStartKilometer(updateRentRequest.getStartKilometer());
         rent.setFinishKilometer(updateRentRequest.getFinishKilometer());
 
-        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())){
+        if (!checkIfFinishKmIsZeroOrNull(updateRentRequest.getFinishKilometer())) {
 
             Car car = this.carService.getCarByCarId(updateRentRequest.getCarId());
             car.setKilometerInfo(updateRentRequest.getFinishKilometer());
             this.carService.saveChangesForCar(car);
 
         }
+
+        checkIfAnyRelatedModelExist(rent);
 
         this.rentDao.save(rent);
 
@@ -164,6 +181,7 @@ public class RentManager implements RentService {
     public Result deleteByRentId(int rentId) throws BusinessException {
 
         checkIfRentExists(rentId);
+        checkIfAnyRelatedModelExist(this.rentDao.getById(rentId));
 
         this.rentDao.deleteById(rentId);
 
@@ -171,25 +189,33 @@ public class RentManager implements RentService {
     }
 
     @Override
-    public DataResult<List<RentListDto>> getAllRentsByCarId(int carId) {
+    public DataResult<List<RentListDto>> getAllRentsByCarId(int carId) throws BusinessException {
+
+        this.carService.checkIfCarExists(carId);
 
         List<Rent> result = this.rentDao.getAllByCar_CarId(carId);
 
         List<RentListDto> response = result.stream()
-                .map(rent -> this.modelMapperService.forDto().map(rent,RentListDto.class))
+                .map(rent -> this.modelMapperService.forDto().map(rent, RentListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<RentListDto>>(response,BusinessMessages.RentMessages.RENTS_FOUND_BY_CAR_ID);
+        return new SuccessDataResult<List<RentListDto>>(response, BusinessMessages.RentMessages.RENTS_FOUND_BY_CAR_ID);
     }
 
     @Override
-    public DataResult<Rent> getRentByRentId(int id) {
+    public DataResult<Rent> getRentByRentId(int id) throws BusinessException {
+
+        checkIfRentExists(id);
+        checkIfAnyRelatedModelExist(this.rentDao.getById(id));
 
         return new SuccessDataResult<Rent>(this.rentDao.getById(id));
     }
 
     @Override
-    public Rent save(Rent rent) {
+    public Rent save(Rent rent) throws BusinessException {
+
+        checkIfRentExists(rent.getRentId());
+        checkIfAnyRelatedModelExist(rent);
         this.rentDao.save(rent);
         return rent;
     }
@@ -214,7 +240,7 @@ public class RentManager implements RentService {
 
     public boolean checkIfRentExists(int rentId) throws BusinessException {
 
-        if (!rentDao.existsById(rentId)){
+        if (!rentDao.existsById(rentId)) {
 
             throw new BusinessException(BusinessMessages.RentMessages.RENT_NOT_FOUND);
 
@@ -222,23 +248,30 @@ public class RentManager implements RentService {
         return true;
     }
 
-   private boolean checkIfStartDayIsBeforeFinishDate(int rentId) throws BusinessException {
+    private boolean checkIfStartDayIsBeforeFinishDate(int rentId) throws BusinessException {
 
-       if(this.rentDao.getById(rentId).getStartDate().compareTo(this.rentDao.getById(rentId).getFinishDate()) >= 0){
+        if (this.rentDao.getById(rentId).getStartDate().compareTo(this.rentDao.getById(rentId).getFinishDate()) >= 0) {
 
             throw new BusinessException(BusinessMessages.RentMessages.INVALID_STARD_DATE);
 
-       }
-       return true;
-   }
+        }
+        return true;
+    }
 
-   private boolean checkIfFinishKmIsZeroOrNull(Integer kmInfo){
+    private boolean checkIfFinishKmIsZeroOrNull(Integer kmInfo) {
 
-        if (kmInfo == 0 || kmInfo == null){
+        if (kmInfo == 0 || kmInfo == null) {
 
             return true;
         }
 
         return false;
-   }
+    }
+
+    private void checkIfAnyRelatedModelExist(Rent rent) throws BusinessException {
+
+        this.customerService.checkIfCustomerExists(rent.getCustomer().getUserId());
+        this.carService.checkIfCarExists(rent.getCar().getCarId());
+
+    }
 }

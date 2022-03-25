@@ -127,4 +127,8 @@ public class BusinessMessages {
         public static final String ADDITIONAL_SERVICE_DELETED = "Service is deleted.";
     }
 
+    public class CustomerMessages{
+        public static final String CUSTOMER_DOES_NOT_EXIST = "Customer does not exist!";
+    }
+
 }
