@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.BrandService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.brandDtos.BrandByIdDto;
 import com.turkcell.rentacar.business.dtos.brandDtos.BrandListDto;
 import com.turkcell.rentacar.business.requests.brandRequests.CreateBrandRequest;
@@ -40,7 +41,7 @@ public class BrandManager implements BrandService {
                 .map(brand -> this.modelMapperService.forDto().map(brand, BrandListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<BrandListDto>>(response, "Brand are listed successfully.");
+        return new SuccessDataResult<List<BrandListDto>>(response, BusinessMessages.BrandMessages.BRANDS_LISTED);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class BrandManager implements BrandService {
 
         this.brandDao.save(brand);
 
-        return new SuccessResult("Brand is added.");
+        return new SuccessResult(BusinessMessages.BrandMessages.BRAND_ADDED);
     }
 
 
@@ -65,7 +66,7 @@ public class BrandManager implements BrandService {
 
         BrandByIdDto response = this.modelMapperService.forDto().map(brand, BrandByIdDto.class);
 
-        return new SuccessDataResult<BrandByIdDto>(response, "Brand is finded by id.");
+        return new SuccessDataResult<BrandByIdDto>(response, BusinessMessages.BrandMessages.BRAND_FOUND);
     }
 
 
@@ -80,7 +81,7 @@ public class BrandManager implements BrandService {
 
         this.brandDao.save(brand);
 
-        return new SuccessResult("Brand is updated successfuly.");
+        return new SuccessResult(BusinessMessages.BrandMessages.BRAND_UPDATED);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class BrandManager implements BrandService {
 
         this.brandDao.deleteById(brandId);
 
-        return new SuccessResult("Brand is deleted successfully.");
+        return new SuccessResult(BusinessMessages.BrandMessages.BRAND_DELETED);
 
     }
 
@@ -100,7 +101,7 @@ public class BrandManager implements BrandService {
 
             if (brandElement.getBrandName().equals(brandName)) {
 
-                throw new BusinessException("There cannot be more than one brand with the same name.");
+                throw new BusinessException(BusinessMessages.BrandMessages.UNIQUE_BRAND_NAME);
 
             }
         }
@@ -112,7 +113,7 @@ public class BrandManager implements BrandService {
 
         if (!brandDao.existsById(brandId)){
 
-            throw new BusinessException("Brand does not exist with id: ' "+brandId+" '.");
+            throw new BusinessException(BusinessMessages.BrandMessages.BRAND_DOES_NOT_EXIST);
 
         }
 

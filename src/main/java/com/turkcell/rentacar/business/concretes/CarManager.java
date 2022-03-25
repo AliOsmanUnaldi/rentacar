@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CarService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.carDtos.CarByIdDto;
 import com.turkcell.rentacar.business.dtos.carDtos.CarListDto;
 import com.turkcell.rentacar.business.requests.carRequests.CreateCarRequest;
@@ -42,7 +43,7 @@ public class CarManager implements CarService {
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CarListDto>>(response, "Cars are listed successfuly.");
+        return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.CarMessages.CARS_LISTED);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class CarManager implements CarService {
 
         this.carDao.save(car);
 
-        return new SuccessResult("Car is added.");
+        return new SuccessResult(BusinessMessages.CarMessages.CAR_ADDED);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class CarManager implements CarService {
 
         this.carDao.save(car);
 
-        return new SuccessResult("Car is updated.");
+        return new SuccessResult(BusinessMessages.CarMessages.CAR_UPDATED);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class CarManager implements CarService {
 
         this.carDao.deleteById(carId);
 
-        return new SuccessResult("Car is deleted.");
+        return new SuccessResult(BusinessMessages.CarMessages.CAR_DELETED);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class CarManager implements CarService {
                 .map(car -> this.modelMapperService.forDto().map(car, CarListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CarListDto>>(response, "Cars are listed successfuly.");
+        return new SuccessDataResult<List<CarListDto>>(response, BusinessMessages.CarMessages.CARS_LISTED);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class CarManager implements CarService {
         Car car = this.carDao.getById(carId);
         CarByIdDto response = this.modelMapperService.forDto().map(car, CarByIdDto.class);
 
-        return new SuccessDataResult<CarByIdDto>(response);
+        return new SuccessDataResult<CarByIdDto>(response,BusinessMessages.CarMessages.CAR_FOUND);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class CarManager implements CarService {
 
         if (!carDao.existsById(carId)){
 
-            throw new BusinessException("Car does not exist with id: ' "+carId+" '.");
+            throw new BusinessException(BusinessMessages.CarMessages.CAR_DOES_NOT_EXIST);
 
         }
 

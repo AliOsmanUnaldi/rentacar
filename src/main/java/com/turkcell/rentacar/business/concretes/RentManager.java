@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.turkcell.rentacar.business.constants.messages.BusinessMessages.INVALID_STARD_DATE;
 
 @Service
 public class RentManager implements RentService {
@@ -62,7 +61,7 @@ public class RentManager implements RentService {
                 .map(rent -> this.modelMapperService.forDto().map(rent, RentListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<RentListDto>>(response, "Rents' infos are listed successfully.");
+        return new SuccessDataResult<List<RentListDto>>(response, BusinessMessages.RentMessages.RENTS_LISTED);
 
     }
 
@@ -81,7 +80,7 @@ public class RentManager implements RentService {
 
         this.rentDao.save(rent);
 
-        return new SuccessResult("Rent is created for individual customer.");
+        return new SuccessResult(BusinessMessages.RentMessages.RENT_SAVED);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class RentManager implements RentService {
 
         this.rentDao.save(rent);
 
-        return new SuccessResult("Rent is created for corporate customer.");
+        return new SuccessResult(BusinessMessages.RentMessages.RENT_SAVED);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class RentManager implements RentService {
 
         RentByIdDto response = this.modelMapperService.forDto().map(rent, RentByIdDto.class);
 
-        return new SuccessDataResult<RentByIdDto>(response,"Rent found by given id : "+id);
+        return new SuccessDataResult<RentByIdDto>(response,BusinessMessages.RentMessages.RENT_FOUND);
     }
 
     @Override
@@ -134,7 +133,7 @@ public class RentManager implements RentService {
 
         this.rentDao.save(rent);
 
-        return new SuccessResult("Rent info is updated for individual customer.");
+        return new SuccessResult(BusinessMessages.RentMessages.RENT_UPDATED);
     }
 
     @Override
@@ -158,7 +157,7 @@ public class RentManager implements RentService {
 
         this.rentDao.save(rent);
 
-        return new SuccessResult("Rent info is updated for corporate customer.");
+        return new SuccessResult(BusinessMessages.RentMessages.RENT_UPDATED);
     }
 
     @Override
@@ -168,7 +167,7 @@ public class RentManager implements RentService {
 
         this.rentDao.deleteById(rentId);
 
-        return new SuccessResult("Rent is deleted.");
+        return new SuccessResult(BusinessMessages.RentMessages.RENT_DELETED);
     }
 
     @Override
@@ -180,7 +179,7 @@ public class RentManager implements RentService {
                 .map(rent -> this.modelMapperService.forDto().map(rent,RentListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<RentListDto>>(response,"Rents are listed for chosen car.");
+        return new SuccessDataResult<List<RentListDto>>(response,BusinessMessages.RentMessages.RENTS_FOUND_BY_CAR_ID);
     }
 
     @Override
@@ -207,17 +206,17 @@ public class RentManager implements RentService {
         ) {
 
             if (carMaintenance.getReturnDate() == null) {
-                throw new BusinessException("Araba bakımda");
+                throw new BusinessException(BusinessMessages.RentMessages.CAR_IS_IN_MAINTENANCE);
 
             }
         }
     }
 
-    private boolean checkIfRentExists(int rentId) throws BusinessException {
+    public boolean checkIfRentExists(int rentId) throws BusinessException {
 
         if (!rentDao.existsById(rentId)){
 
-            throw new BusinessException(BusinessMessages.RENT_NOT_FOUND);
+            throw new BusinessException(BusinessMessages.RentMessages.RENT_NOT_FOUND);
 
         }
         return true;
@@ -227,7 +226,7 @@ public class RentManager implements RentService {
 
        if(this.rentDao.getById(rentId).getStartDate().compareTo(this.rentDao.getById(rentId).getFinishDate()) >= 0){
 
-            throw new BusinessException(INVALID_STARD_DATE);
+            throw new BusinessException(BusinessMessages.RentMessages.INVALID_STARD_DATE);
 
        }
        return true;

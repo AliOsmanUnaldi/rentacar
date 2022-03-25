@@ -11,10 +11,10 @@ import java.time.LocalDate;
 @Service
 public class AkBankPosAdapter {
 
-    public Result pos(String cardOwner, String cardNumber, String cvv, LocalDate expireDate){
+    public Result pos(String cardOwner, String cardNumber, String cvc, LocalDate expireDate){
 
         AkBankPosManager akBankPosManager = new AkBankPosManager();
-        boolean posResult = akBankPosManager.makePayment(cardNumber,cardOwner,cvv,expireDate);
+        boolean posResult = akBankPosManager.makePayment(cardNumber,cardOwner,cvc,expireDate);
 
         if(posResult){
 

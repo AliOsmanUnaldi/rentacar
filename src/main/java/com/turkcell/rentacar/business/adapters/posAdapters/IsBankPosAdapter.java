@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @Primary
 public class IsBankPosAdapter {
 
-    public Result pos(String cardNumber, String cardOwner, String cvv, LocalDate expireDate){
+    public Result pos(String cardNumber, String cardOwner, String cvc, LocalDate expireDate){
 
         IsBankPosManager isBankPosManager = new IsBankPosManager();
-        boolean posResult = isBankPosManager.makePayment(cardNumber,cardOwner,cvv,expireDate);
+        boolean posResult = isBankPosManager.makePayment(cardNumber,cardOwner,cvc,expireDate);
 
         if(posResult){
 

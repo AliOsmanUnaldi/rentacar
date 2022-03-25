@@ -32,4 +32,6 @@ public interface RentService {
     DataResult<Rent> getRentByRentId(int id);
 
     Rent save(Rent rent);
+
+    boolean checkIfRentExists(int rentId) throws BusinessException;
 }

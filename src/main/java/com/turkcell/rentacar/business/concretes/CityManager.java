@@ -1,11 +1,13 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CityService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.cityDtos.CityByIdDto;
 import com.turkcell.rentacar.business.dtos.cityDtos.CityListDto;
 import com.turkcell.rentacar.business.requests.cityRequests.CreateCityRequest;
 import com.turkcell.rentacar.business.requests.cityRequests.DeleteCityRequest;
 import com.turkcell.rentacar.business.requests.cityRequests.UpdateCityRequest;
+import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.mapping.ModelMapperService;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
@@ -34,7 +36,7 @@ public class CityManager implements CityService {
                 .map(city -> this.modelMapperService.forDto().map(city,CityListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CityListDto>>(response,"Cities are listed successfully.");
+        return new SuccessDataResult<List<CityListDto>>(response, BusinessMessages.CityMessages.CITIES_LISTED);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class CityManager implements CityService {
 
         cityDao.save(city);
 
-        return new SuccessResult("City is created successfully.");
+        return new SuccessResult(BusinessMessages.CityMessages.CITY_ADDED);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class CityManager implements CityService {
 
         this.cityDao.save(city);
 
-        return new SuccessResult("City is updated successfully.");
+        return new SuccessResult();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class CityManager implements CityService {
         City result = this.cityDao.getById(id);
         CityByIdDto response = this.modelMapperService.forDto().map(result,CityByIdDto.class);
 
-        return new SuccessDataResult<CityByIdDto>(response,"City is found by id: "+id+".");
+        return new SuccessDataResult<CityByIdDto>(response,BusinessMessages.CityMessages.CITY_FOUND);
     }
 
     @Override
@@ -71,6 +73,21 @@ public class CityManager implements CityService {
 
         this.cityDao.deleteById(deleteCityRequest.getId());
 
-        return new SuccessResult("City is deleted for id: "+deleteCityRequest.getId()+".");
+        return new SuccessResult(BusinessMessages.CityMessages.CITY_DELETED);
+    }
+
+    @Override
+    public City getCityByIdWithoutDto(int id) {
+
+        return this.cityDao.getById(id);
+    }
+
+    public boolean checkIfCityExists(int id) throws BusinessException {
+
+        if (!this.cityDao.existsById(id)){
+            throw new BusinessException(BusinessMessages.CityMessages.CITY_DOES_NOT_EXIST);
+        }
+
+        return true;
     }
 }

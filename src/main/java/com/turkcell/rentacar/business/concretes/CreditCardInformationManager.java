@@ -1,7 +1,8 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CreditCardInformationService;
-import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
+import com.turkcell.rentacar.business.abstracts.CustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.creditCardInformationDtos.CreditCardInformationByCustomerIdDto;
 import com.turkcell.rentacar.business.dtos.creditCardInformationDtos.CreditCardInformationByIdDto;
 import com.turkcell.rentacar.business.dtos.creditCardInformationDtos.CreditCardInformationListDto;
@@ -25,25 +26,27 @@ public class CreditCardInformationManager implements CreditCardInformationServic
 
     private CreditCardInformationDao creditCardInformationDao;
     private ModelMapperService modelMapperService;
-    private IndividualCustomerService individualCustomerService;
+    private CustomerService customerService;
 
     @Autowired
     public CreditCardInformationManager(CreditCardInformationDao creditCardInformationDao,ModelMapperService modelMapperService,
-                                        IndividualCustomerService individualCustomerService) {
+                                        CustomerService customerService) {
         this.creditCardInformationDao = creditCardInformationDao;
         this.modelMapperService = modelMapperService;
-        this.individualCustomerService = individualCustomerService;
+        this.customerService = customerService;
     }
 
     @Override
     public Result add(CreateCreditCardInformationRequest createCreditCardInformationRequest) {
 
+        this.customerService.checkIfCustomerExists(createCreditCardInformationRequest.getCustomer());
+
         CreditCardInformation creditCardInformation = this.modelMapperService.forRequest().map(createCreditCardInformationRequest,CreditCardInformation.class);
-        Customer customer = this.individualCustomerService.getIndividualCustomerByIndividualCustomerId(createCreditCardInformationRequest.getCustomer()).getData();
+        Customer customer = this.customerService.getCustomerByCustomerId(createCreditCardInformationRequest.getCustomer());
         creditCardInformation.setCustomer(customer);
         this.creditCardInformationDao.save(creditCardInformation);
 
-        return new SuccessResult("Credit cards infos are saved successfully.");
+        return new SuccessResult(BusinessMessages.CreditCardInformationMessages.CREDIT_CARD_INFORMATION_ADDED);
     }
 
 
@@ -55,7 +58,7 @@ public class CreditCardInformationManager implements CreditCardInformationServic
                 .map(creditCardInformation -> this.modelMapperService.forDto().map(creditCardInformation,CreditCardInformationListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CreditCardInformationListDto>>(response,"Credit cards infos are listed.");
+        return new SuccessDataResult<List<CreditCardInformationListDto>>(response,BusinessMessages.CreditCardInformationMessages.CREDIT_CARD_INFORMATIONS_LISTED);
     }
 
     @Override
@@ -64,17 +67,20 @@ public class CreditCardInformationManager implements CreditCardInformationServic
         CreditCardInformation creditCardInformation = this.creditCardInformationDao.getById(id);
         CreditCardInformationByIdDto response = this.modelMapperService.forDto().map(creditCardInformation,CreditCardInformationByIdDto.class);
 
-        return new SuccessDataResult<CreditCardInformationByIdDto>(response,"Credit card info is found for specified id.");
+        return new SuccessDataResult<CreditCardInformationByIdDto>(response,BusinessMessages.CreditCardInformationMessages.CREDIT_CARD_INFORMATION_FOUND);
     }
 
     @Override
     public DataResult<List<CreditCardInformationByCustomerIdDto>> getCreditCardInformationDtoByCustomerId(int customerId) {
+
+        this.customerService.checkIfCustomerExists(customerId);
 
         List<CreditCardInformation> result = this.creditCardInformationDao.getAllByCustomer_UserId(customerId);
         List<CreditCardInformationByCustomerIdDto> response = result.stream()
                 .map(creditCardInformation -> this.modelMapperService.forDto().map(creditCardInformation,CreditCardInformationByCustomerIdDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CreditCardInformationByCustomerIdDto>>(response,"Credit cards infos are listed for specified customer.");
+        return new SuccessDataResult<List<CreditCardInformationByCustomerIdDto>>(response,BusinessMessages.CreditCardInformationMessages.CREDIT_CARD_INFORMATIONS_FOUND_BY_CUSTOMER_ID);
     }
+
 }

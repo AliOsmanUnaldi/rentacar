@@ -2,6 +2,7 @@ package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.AdditionalServiceService;
 import com.turkcell.rentacar.business.abstracts.OrderedAdditionalServiceService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.additionalServiceDtos.AdditionalServiceDto;
 import com.turkcell.rentacar.business.dtos.orderedAdditionalServiceDtos.OrderedAdditionalServiceDto;
 import com.turkcell.rentacar.business.dtos.orderedAdditionalServiceDtos.OrderedAdditionalServiceListDto;
@@ -49,7 +50,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
                         .forDto().map(orderedAdditionalService, OrderedAdditionalServiceListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(response,"Ordered Services Listed.");
+        return new SuccessDataResult<List<OrderedAdditionalServiceListDto>>(response, BusinessMessages.OrderedMessages.ORDERED_ADITOONAL_SERVICES_LISTED);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
 
         this.orderedAdditionalServiceDao.save(orderedAdditionalService);
 
-        return new SuccessResult("Ordered Service saved.");
+        return new SuccessResult(BusinessMessages.OrderedMessages.ORDERED_ADITOONAL_SERVICE_ADDED);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
         OrderedAdditionalServiceDto response = this.modelMapperService.forDto()
                 .map(orderedAdditionalService, OrderedAdditionalServiceDto.class);
 
-        return new SuccessDataResult<>(response,"Order Service listed.");
+        return new SuccessDataResult<>(response,BusinessMessages.OrderedMessages.ORDERED_ADITOONAL_SERVICE_LISTED);
     }
 
     @Override
@@ -94,14 +95,14 @@ public class OrderedAdditionalServiceManager implements OrderedAdditionalService
                 .map(updateOrderedAdditionalServiceRequest, OrderedAdditionalService.class);
         this.orderedAdditionalServiceDao.save(orderedAdditionalService);
 
-        return new SuccessResult("Ordered Service Updated");
+        return new SuccessResult(BusinessMessages.OrderedMessages.ORDERED_ADITOONAL_SERVICE_UPDATED);
     }
 
     @Override
     public Result delete(DeleteOrderedAdditionalServiceRequest deleteOrderedAdditionalServiceRequest)
             throws BusinessException {
         this.orderedAdditionalServiceDao.deleteById(deleteOrderedAdditionalServiceRequest.getOrderedAdditionalServiceId());
-        return new SuccessResult("OrderedService deleted.");
+        return new SuccessResult(BusinessMessages.OrderedMessages.ORDERED_ADITOONAL_SERVICE_DELETED);
     }
 
     @Override

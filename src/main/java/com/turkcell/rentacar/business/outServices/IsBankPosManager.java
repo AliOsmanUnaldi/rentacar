@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Service
 public class IsBankPosManager implements PosService {
 
-    public boolean makePayment(String cardNumber, String cardOwner, String cvv, LocalDate expireDate){
+    public boolean makePayment(String cardNumber, String cardOwner, String cvc, LocalDate expireDate){
         return true;
     }
 }

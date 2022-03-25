@@ -16,6 +16,8 @@ public class CreateCreditCardInformationRequest {
 
     private String cardNumber;
 
+    private String cvc;
+
     private LocalDate cardExpiryDate;
 
     private Integer customer;

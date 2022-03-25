@@ -25,6 +25,9 @@ public class CreditCardInformation {
     @Column(name = "card_number")
     private String cardNumber;
 
+    @Column(name = "cvc")
+    private String cvc;
+
     @Column(name = "card_expire_date")
     private LocalDate cardExpiryDate;
 

@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.ColorService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.colorDtos.ColorByIdDto;
 import com.turkcell.rentacar.business.dtos.colorDtos.ColorListDto;
 import com.turkcell.rentacar.business.requests.colorRequests.CreateColorRequest;
@@ -13,18 +14,21 @@ import com.turkcell.rentacar.core.utilities.results.SuccessDataResult;
 import com.turkcell.rentacar.core.utilities.results.SuccessResult;
 import com.turkcell.rentacar.dataAccess.abstracts.ColorDao;
 import com.turkcell.rentacar.entities.concretes.Color;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class ColorManager implements ColorService {
 
     private ColorDao colorDao;
     private ModelMapperService modelMapperService;
+
+    public ColorManager(ColorDao colorDao, ModelMapperService modelMapperService) {
+        this.colorDao = colorDao;
+        this.modelMapperService = modelMapperService;
+    }
 
     @Override
     public DataResult<List<ColorListDto>> getAll() {
@@ -34,7 +38,7 @@ public class ColorManager implements ColorService {
                 .map(color -> this.modelMapperService.forDto().map(color, ColorListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<ColorListDto>>(response, "Colors are listed successfully.");
+        return new SuccessDataResult<List<ColorListDto>>(response, BusinessMessages.ColorMessages.COLORS_LISTED);
     }
 
     @Override
@@ -46,7 +50,7 @@ public class ColorManager implements ColorService {
 
         this.colorDao.save(color);
 
-        return new SuccessResult("Color is added.");
+        return new SuccessResult(BusinessMessages.ColorMessages.COLOR_ADDED);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ColorManager implements ColorService {
         Color color = this.colorDao.getById(colorId);
         ColorByIdDto response = this.modelMapperService.forDto().map(color, ColorByIdDto.class);
 
-        return new SuccessDataResult<ColorByIdDto>(response);
+        return new SuccessDataResult<ColorByIdDto>(response,BusinessMessages.ColorMessages.COLOR_FOUND);
     }
 
 
@@ -71,7 +75,7 @@ public class ColorManager implements ColorService {
 
         this.colorDao.save(color);
 
-        return new SuccessResult("Color is updated.");
+        return new SuccessResult(BusinessMessages.ColorMessages.COLOR_UPDATED);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ColorManager implements ColorService {
 
         this.colorDao.deleteById(colorId);
 
-        return new SuccessResult("Color is deleted.");
+        return new SuccessResult();
     }
 
     private boolean checkIfColorNameIsUnique(String colorName) throws BusinessException {
@@ -90,7 +94,7 @@ public class ColorManager implements ColorService {
 
             if (colorElement.getColorName().equals(colorName)) {
 
-                throw new BusinessException("Aynı isimde birden fazla renk olamaz");
+                throw new BusinessException(BusinessMessages.ColorMessages.SAME_NAMED_COLORS_ARE_NOT_DESIRED);
 
             }
         }
@@ -103,7 +107,7 @@ public class ColorManager implements ColorService {
 
         if (!colorDao.existsById(colorId)){
 
-            throw new BusinessException("Color does not exist with id: ' "+colorId+" '.");
+            throw new BusinessException(BusinessMessages.ColorMessages.COLOR_DOES_NOT_EXIST);
 
         }
 

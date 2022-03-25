@@ -5,8 +5,10 @@ import com.turkcell.rentacar.business.dtos.cityDtos.CityListDto;
 import com.turkcell.rentacar.business.requests.cityRequests.CreateCityRequest;
 import com.turkcell.rentacar.business.requests.cityRequests.DeleteCityRequest;
 import com.turkcell.rentacar.business.requests.cityRequests.UpdateCityRequest;
+import com.turkcell.rentacar.core.exceptions.BusinessException;
 import com.turkcell.rentacar.core.utilities.results.DataResult;
 import com.turkcell.rentacar.core.utilities.results.Result;
+import com.turkcell.rentacar.entities.concretes.City;
 
 import java.util.List;
 
@@ -21,4 +23,8 @@ public interface CityService {
     DataResult<CityByIdDto> getCityByCityId(int id);
 
     Result deleteCityByCityId(DeleteCityRequest deleteCityRequest);
+
+    City getCityByIdWithoutDto(int id);
+
+    boolean checkIfCityExists(int id) throws BusinessException;
 }

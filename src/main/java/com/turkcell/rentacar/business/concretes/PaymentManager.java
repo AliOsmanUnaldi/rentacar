@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.*;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.paymentDtos.PaymentByCustomerIdDto;
 import com.turkcell.rentacar.business.dtos.paymentDtos.PaymentByIdDto;
 import com.turkcell.rentacar.business.dtos.paymentDtos.PaymentListDto;
@@ -38,12 +39,13 @@ public class PaymentManager implements PaymentService {
     private AdditionalServiceService additionalServiceService;
     private IndividualCustomerService individualCustomerService;
     private PosService posService;
+    private CityService cityService;
 
     @Autowired
     public PaymentManager(PaymentDao paymentDao, ModelMapperService modelMapperService, @Lazy OrderedAdditionalServiceService orderedAdditionalServiceService,
                           @Lazy RentService rentService, @Lazy InvoiceService invoiceService,
                           @Lazy AdditionalServiceService additionalServiceService,@Lazy IndividualCustomerService individualCustomerService,
-                          PosService posService) {
+                          PosService posService, CityService cityService) {
         this.paymentDao = paymentDao;
         this.modelMapperService = modelMapperService;
         this.orderedAdditionalServiceService = orderedAdditionalServiceService;
@@ -52,19 +54,20 @@ public class PaymentManager implements PaymentService {
         this.additionalServiceService = additionalServiceService;
         this.individualCustomerService = individualCustomerService;
         this.posService = posService;
+        this.cityService = cityService;
 
     }
 
     @Override
     public Result add(CreatePaymentRequest createPaymentRequest) throws BusinessException {
 
-        if (!posService.makePayment(createPaymentRequest.getCardNumber(),createPaymentRequest.getCardOwner(), createPaymentRequest.getCvv(), createPaymentRequest.getCardExpiryDate())){
-            throw new BusinessException("Ödeme başarısız!");
+        if (!posService.makePayment(createPaymentRequest.getCardNumber(),createPaymentRequest.getCardOwner(), createPaymentRequest.getCvc(), createPaymentRequest.getCardExpiryDate())){
+            throw new BusinessException(BusinessMessages.PaymentMessages.PAYMENT_FAILED);
         }
 
         runPaymentSuccessor(createPaymentRequest);
 
-        return new SuccessResult("Ödeme başarılı.");
+        return new SuccessResult(BusinessMessages.PaymentMessages.PAYMENT_SUCCESSFUL);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class PaymentManager implements PaymentService {
                 .map(payment -> this.modelMapperService.forDto().map(payment,PaymentListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<PaymentListDto>>(response,"All payments are listed;");
+        return new SuccessDataResult<List<PaymentListDto>>(response,BusinessMessages.PaymentMessages.PAYMENTS_LISTED);
     }
 
     @Override
@@ -84,7 +87,7 @@ public class PaymentManager implements PaymentService {
         Payment payment = this.paymentDao.getById(id);
         PaymentByIdDto response = this.modelMapperService.forDto().map(payment,PaymentByIdDto.class);
 
-        return new SuccessDataResult<PaymentByIdDto>(response,"Payment is found by specified id.");
+        return new SuccessDataResult<PaymentByIdDto>(response,BusinessMessages.PaymentMessages.PAYMENT_FOUND);
     }
 
     @Override
@@ -95,7 +98,7 @@ public class PaymentManager implements PaymentService {
                 .map(payment -> this.modelMapperService.forDto().map(payment,PaymentByCustomerIdDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<PaymentByCustomerIdDto>>(response,"Payments are listed by specified customer.");
+        return new SuccessDataResult<List<PaymentByCustomerIdDto>>(response,BusinessMessages.PaymentMessages.PAYMENT_FOUND_BY_CUSOMER);
     }
 
     @Transactional
@@ -123,6 +126,8 @@ public class PaymentManager implements PaymentService {
         rent.setRentId(0);
         rent.setStartDate(createRentForPaymentRequest.getStartDate());
         rent.setFinishDate(createRentForPaymentRequest.getFinishDate());
+        rent.setRentedCity(this.cityService.getCityByIdWithoutDto(createRentForPaymentRequest.getRentedCity()));
+        rent.setDeliveredCity(this.cityService.getCityByIdWithoutDto(createRentForPaymentRequest.getDeliveredCity()));
 
         this.rentService.save(rent);
 

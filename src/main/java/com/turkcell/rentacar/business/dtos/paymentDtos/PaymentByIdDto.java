@@ -19,7 +19,7 @@ public class PaymentByIdDto {
 
     private String cardNumber;
 
-    private String cvv;
+    private String cvc;
 
     private LocalDate cardExpiryDate;
 

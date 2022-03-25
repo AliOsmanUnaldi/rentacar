@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.AdditionalServiceService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.additionalServiceDtos.AdditionalServiceDto;
 import com.turkcell.rentacar.business.dtos.additionalServiceDtos.AdditionalServiceListDto;
 import com.turkcell.rentacar.business.requests.additionalServiceRequests.CreateAdditionalServiceRequest;
@@ -43,7 +44,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
                         .map(additionalService, AdditionalServiceListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<AdditionalServiceListDto>>(response,"Services listed.");
+        return new SuccessDataResult<List<AdditionalServiceListDto>>(response, BusinessMessages.AdditionalServiceMessages.ADDITIONAL_SERVICES_LISTED);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
         this.additionalServiceDao.save(additionalService);
 
-        return new SuccessResult("Service is saved");
+        return new SuccessResult(BusinessMessages.AdditionalServiceMessages.ADDITIONAL_SERVICE_ADDED);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
         AdditionalServiceDto response = this.modelMapperService.forDto()
                 .map(additionalService, AdditionalServiceDto.class);
 
-        return new SuccessDataResult<AdditionalServiceDto>(response,"Service listed.");
+        return new SuccessDataResult<AdditionalServiceDto>(response,BusinessMessages.AdditionalServiceMessages.ADDITIONAL_SERVICE_FOUND);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
         this.additionalServiceDao.save(additionalService);
 
-        return new SuccessResult("Service uptaded.");
+        return new SuccessResult(BusinessMessages.AdditionalServiceMessages.ADDITIONAL_SERVICE_UPDATED);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class AdditionalServiceManager implements AdditionalServiceService{
 
         this.additionalServiceDao.deleteById(deleteAdditionalServiceRequest.getAdditionalServiceId());
 
-        return new SuccessResult("Service deleted.");
+        return new SuccessResult(BusinessMessages.AdditionalServiceMessages.ADDITIONAL_SERVICE_DELETED);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Service
 public class AkBankPosManager implements PosService {
 
-    public boolean makePayment(String cardOwner,String cardNumber, String cvv, LocalDate expireDate){
+    public boolean makePayment(String cardOwner,String cardNumber, String cvc, LocalDate expireDate){
         return false;
     }
 

@@ -2,6 +2,7 @@ package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CarDamageRecordService;
 import com.turkcell.rentacar.business.abstracts.CarService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.carDamageRecordDtos.CarDamageRecordByIdDto;
 import com.turkcell.rentacar.business.dtos.carDamageRecordDtos.CarDamageRecordListDto;
 import com.turkcell.rentacar.business.requests.carDamageRecordRequest.CreateCarDamageRecordRequest;
@@ -48,7 +49,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
                 .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord,CarDamageRecordListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CarDamageRecordListDto>>(response,"Car's damage records are listed.");
+        return new SuccessDataResult<List<CarDamageRecordListDto>>(response, BusinessMessages.CarDamageRecordMessages.CAR_DAMAGES_LISTED);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
         this.carService.saveChangesForCar(car);
 
 
-        return new SuccessResult("Car damage record is created.");
+        return new SuccessResult(BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_ADDED);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
         this.carService.saveChangesForCar(car);
         this.carDamageRecordDao.save(carDamageRecord);
 
-        return new SuccessResult("Car damage is updated.");
+        return new SuccessResult(BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_UPDATED);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
 
         this.carDamageRecordDao.deleteById(deleteCarDamageRecordRequest.getId());
 
-        return new SuccessResult("Car damage record is deleted.");
+        return new SuccessResult(BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_DELETED);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
         CarDamageRecord carDamageRecord = this.carDamageRecordDao.getById(id);
         CarDamageRecordByIdDto response = this.modelMapperService.forDto().map(carDamageRecord, CarDamageRecordByIdDto.class);
 
-        return new SuccessDataResult<CarDamageRecordByIdDto>(response,"Car damage record is founded.");
+        return new SuccessDataResult<CarDamageRecordByIdDto>(response,BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_FOUND);
     }
 
     @Override
@@ -115,7 +116,7 @@ public class CarDamageRecordManager implements CarDamageRecordService {
                 .map(carDamageRecord -> this.modelMapperService.forDto().map(carDamageRecord,CarDamageRecordListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CarDamageRecordListDto>>(response,"Damage records found for car : "+carId+".");
+        return new SuccessDataResult<List<CarDamageRecordListDto>>(response,BusinessMessages.CarDamageRecordMessages.CAR_DAMAGES_FOUND_BY_CAR_ID);
     }
 
     @Override
@@ -130,15 +131,14 @@ public class CarDamageRecordManager implements CarDamageRecordService {
             totalAmountOfCarDamageRecords += carDamageRecordListDto.getAmountOfDamageAsFinancial();
         }
 
-        return new SuccessDataResult(totalAmountOfCarDamageRecords,
-                "Total amount of damage records is "+totalAmountOfCarDamageRecords+" for car : "+carId);
+        return new SuccessDataResult(totalAmountOfCarDamageRecords);
     }
 
     private boolean checkIfCarDamageRecordExists(int id) throws BusinessException {
 
         if (!this.carDamageRecordDao.existsById(id)){
 
-            throw new BusinessException("Car damage info does not exist for id : "+id+".");
+            throw new BusinessException(BusinessMessages.CarDamageRecordMessages.CAR_DAMAGE_DOES_NOT_EXIST);
 
         }
         return true;

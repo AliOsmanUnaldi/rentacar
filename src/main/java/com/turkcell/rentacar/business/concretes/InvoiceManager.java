@@ -4,6 +4,7 @@ import com.turkcell.rentacar.business.abstracts.CarService;
 import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
 import com.turkcell.rentacar.business.abstracts.InvoiceService;
 import com.turkcell.rentacar.business.abstracts.RentService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.invoiceDtos.InvoiceByIdDto;
 import com.turkcell.rentacar.business.dtos.invoiceDtos.InvoiceListDto;
 import com.turkcell.rentacar.business.requests.InvoiceRequests.CreateInvoiceRequest;
@@ -55,7 +56,7 @@ public class InvoiceManager implements InvoiceService {
                         .map(invoice, InvoiceListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<InvoiceListDto>>(response,"All invoices are listed.");
+        return new SuccessDataResult<List<InvoiceListDto>>(response, BusinessMessages.InvoiceMessages.INVOICES_LISTED);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class InvoiceManager implements InvoiceService {
 
         this.invoiceDao.save(invoice);
 
-        return new SuccessResult("Invoice is added successfully.");
+        return new SuccessResult(BusinessMessages.InvoiceMessages.INVOICES_ADDED);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class InvoiceManager implements InvoiceService {
 
         this.invoiceDao.save(invoice);
 
-        return new SuccessResult("Invoice is updated successfully.");
+        return new SuccessResult(BusinessMessages.InvoiceMessages.INVOICES_UPDATED);
     }
 
     @Override
@@ -102,7 +103,7 @@ public class InvoiceManager implements InvoiceService {
 
         this.invoiceDao.deleteById(deleteInvoiceRequest.getInvoiceId());
 
-        return new SuccessResult("Invoice is deleted successfully.");
+        return new SuccessResult(BusinessMessages.InvoiceMessages.INVOICES_DELETED);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class InvoiceManager implements InvoiceService {
         Invoice invoice = this.invoiceDao.getById(invoiceId);
         InvoiceByIdDto response = this.modelMapperService.forDto().map(invoice, InvoiceByIdDto.class);
 
-        return new SuccessDataResult<InvoiceByIdDto>(response,"Invoice is found by id: "+invoiceId+".");
+        return new SuccessDataResult<InvoiceByIdDto>(response,BusinessMessages.InvoiceMessages.INVOICE_FOUND);
     }
 
     @Override

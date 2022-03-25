@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.IndividualCustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.userDtos.customerDtos.individualCustomerDtos.IndividualCustomerListDto;
 import com.turkcell.rentacar.business.dtos.userDtos.customerDtos.individualCustomerDtos.IndividualCustomerByIdDto;
 import com.turkcell.rentacar.business.requests.individualCustomerRequests.CreateIndividualCustomerRequest;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
                         .map(individualCustomer, IndividualCustomerListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<IndividualCustomerListDto>>(response,"Individual customers listed.");
+        return new SuccessDataResult<List<IndividualCustomerListDto>>(response, BusinessMessages.IndividualCustomerMessages.INDIVIDUAL_CUSTOMERS_LISTED);
     }
 
     @Override
@@ -50,7 +51,7 @@ import java.util.stream.Collectors;
 
         this.individualCustomerDao.save(individualCustomer);
 
-        return new SuccessResult("Individual customer "+ individualCustomer.getFirstName()+" "+individualCustomer.getLastName()+" is added.");
+        return new SuccessResult(BusinessMessages.IndividualCustomerMessages.INDIVIDUAL_CUSTOMER_ADDED);
     }
 
     @Override
@@ -60,15 +61,15 @@ import java.util.stream.Collectors;
 
         this.individualCustomerDao.save(individualCustomer);
 
-        return new SuccessResult("Individual customer "+individualCustomer.getFirstName()+" "+individualCustomer.getLastName()+" is updated.");
+        return new SuccessResult(BusinessMessages.IndividualCustomerMessages.INDIVIDUAL_CUSTOMER_UPDATED);
     }
 
     @Override
     public Result delete(DeleteIndividualCustomerRequest deleteIndividualCustomerRequest) {
 
-        this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getUserId()); //userdan silmen gerekebilir
+        this.individualCustomerDao.deleteById(deleteIndividualCustomerRequest.getUserId());
 
-        return new SuccessResult("Individual customer is deleted.");
+        return new SuccessResult(BusinessMessages.IndividualCustomerMessages.INDIVIDUAL_CUSTOMER_DELETED);
     }
 
     @Override
@@ -78,7 +79,7 @@ import java.util.stream.Collectors;
 
         IndividualCustomerByIdDto response = this.modelMapperService.forDto().map(individualCustomer, IndividualCustomerByIdDto.class);
 
-        return new SuccessDataResult<IndividualCustomerByIdDto>(response,"Individual customer found by given id : "+userId);
+        return new SuccessDataResult<IndividualCustomerByIdDto>(response,BusinessMessages.IndividualCustomerMessages.INDIVIDUAL_CUSTOMER_FOUND);
     }
 
     @Override

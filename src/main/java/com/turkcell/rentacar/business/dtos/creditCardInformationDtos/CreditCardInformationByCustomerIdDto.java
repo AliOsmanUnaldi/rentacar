@@ -17,5 +17,7 @@ public class CreditCardInformationByCustomerIdDto {
 
     private String cardNumber;
 
+    private String cvc;
+
     private LocalDate cardExpiryDate;
 }

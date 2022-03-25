@@ -1,6 +1,7 @@
 package com.turkcell.rentacar.business.concretes;
 
 import com.turkcell.rentacar.business.abstracts.CorporateCustomerService;
+import com.turkcell.rentacar.business.constants.messages.BusinessMessages;
 import com.turkcell.rentacar.business.dtos.userDtos.customerDtos.corporateCustomerDtos.CorporateCustomerByIdDto;
 import com.turkcell.rentacar.business.dtos.userDtos.customerDtos.corporateCustomerDtos.CorporateCustomerListDto;
 import com.turkcell.rentacar.business.requests.corporateCustomerRequests.CreateCorporateCustomerRequest;
@@ -40,7 +41,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
                         .map(corporateCustomer, CorporateCustomerListDto.class))
                 .collect(Collectors.toList());
 
-        return new SuccessDataResult<List<CorporateCustomerListDto>>(response,"Corporate customers listed.");
+        return new SuccessDataResult<List<CorporateCustomerListDto>>(response, BusinessMessages.CorporateCustomerMessages.CORPORATE_CUSTOMERS_LISTED);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         this.corporateCustomerDao.save(corporateCustomer);
 
-        return new SuccessResult("Corporate customer "+ corporateCustomer.getCompanyName()+" is added.");
+        return new SuccessResult(BusinessMessages.CorporateCustomerMessages.CORPORATE_CUSTOMER_ADDED);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         this.corporateCustomerDao.save(corporateCustomer);
 
-        return new SuccessResult("Corporate customer "+corporateCustomer.getCompanyName()+" is updated.");
+        return new SuccessResult(BusinessMessages.CorporateCustomerMessages.CORPORATE_CUSTOMER_UPDATED);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         this.corporateCustomerDao.deleteById(deleteCorporateCustomerRequest.getUserId()); //userdan silmen gerekebilir
 
-        return new SuccessResult("Corporate customer is deleted.");
+        return new SuccessResult(BusinessMessages.CorporateCustomerMessages.CORPORATE_CUSTOMER_DELETED);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class CorporateCustomerManager implements CorporateCustomerService {
 
         CorporateCustomerByIdDto response = this.modelMapperService.forDto().map(corporateCustomer, CorporateCustomerByIdDto.class);
 
-        return new SuccessDataResult<CorporateCustomerByIdDto>(response,"Corporate customer found by given id : "+userId);
+        return new SuccessDataResult<CorporateCustomerByIdDto>(response,BusinessMessages.CorporateCustomerMessages.CORPORATE_CUSTOMER_FOUND);
     }
 
     @Override
