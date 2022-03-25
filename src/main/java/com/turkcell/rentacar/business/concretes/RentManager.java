@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.turkcell.rentacar.business.constants.messages.BusinessMessages.INVALID_STARD_DATE;
+
 @Service
 public class RentManager implements RentService {
 
@@ -225,7 +227,7 @@ public class RentManager implements RentService {
 
        if(this.rentDao.getById(rentId).getStartDate().compareTo(this.rentDao.getById(rentId).getFinishDate()) >= 0){
 
-            throw new BusinessException("Start date cannot be later than finish date!");
+            throw new BusinessException(INVALID_STARD_DATE);
 
        }
        return true;

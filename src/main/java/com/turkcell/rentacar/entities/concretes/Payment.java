@@ -29,6 +29,9 @@ public class Payment {
     @Column(name = "card_number")
     private String cardNumber;
 
+    @Column(name = "cvv")
+    private String cvv;
+
     @Column(name = "card_expire_date")
     private LocalDate cardExpiryDate;
 

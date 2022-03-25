@@ -1,5 +1,7 @@
 package com.turkcell.rentacar.entities.concretes;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +21,7 @@ public class Customer extends User{
 
     @OneToMany(mappedBy = "customer")
     private List<Rent> rents;
+
+    @OneToMany(mappedBy = "customer")
+    private List<CreditCardInformation> creditCardInformations;
 }

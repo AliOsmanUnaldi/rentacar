@@ -34,7 +34,6 @@ public class CreateRentForPaymentRequest {
     @Positive
     private Integer customer;
 
-
     private Integer startKilometer;
 
     private Integer finishKilometer;

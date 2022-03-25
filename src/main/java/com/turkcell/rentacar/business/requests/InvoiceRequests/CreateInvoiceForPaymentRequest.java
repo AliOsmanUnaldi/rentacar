@@ -11,6 +11,4 @@ public class CreateInvoiceForPaymentRequest {
 
     private String invoiceNumber;
 
-    private Integer customer;
-
 }

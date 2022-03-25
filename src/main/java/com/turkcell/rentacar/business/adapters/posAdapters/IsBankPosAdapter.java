@@ -14,14 +14,19 @@ import java.time.LocalDate;
 public class IsBankPosAdapter {
 
     public Result pos(String cardNumber, String cardOwner, String cvv, LocalDate expireDate){
+
         IsBankPosManager isBankPosManager = new IsBankPosManager();
-        boolean posResult = isBankPosManager.makePayment(cardNumber,cardOwner,cvv,expireDate);//posdto.name ıvır zıvır
+        boolean posResult = isBankPosManager.makePayment(cardNumber,cardOwner,cvv,expireDate);
+
         if(posResult){
+
         return new SuccessResult();
+
         }
+
         return new ErrorResult();
     }
-    //ziraat bankası için de aynısını yaap
+
 
 
 }

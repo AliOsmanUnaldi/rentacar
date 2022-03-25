@@ -23,9 +23,9 @@ public class CreatePaymentRequest {
 
     private String cardNumber;
 
-    private LocalDate cardExpiryDate;
+    private String cvv;
 
-    private double totalPrice;
+    private LocalDate cardExpiryDate;
 
     private CreateOrderedAdditionalServiceRequest createOrderedAdditionalServiceRequest;
 
